@@ -22,6 +22,12 @@ public class Customer {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, length = 8)
-    private String cpf;
+    @Column(nullable = false, length = 50)
+    private String email;
+
+    @Column(nullable = false, length = 11)
+    private String rg;
+
+    @Column(nullable = false, length = 50)
+    private String password;
 }
