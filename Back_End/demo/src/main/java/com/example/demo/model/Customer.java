@@ -30,4 +30,9 @@ public class Customer {
 
     @Column(nullable = false, length = 50)
     private String password;
+
+    //Tava dando erro???
+    public String getName() {
+        return name;
+    }
 }
