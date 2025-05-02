@@ -32,4 +32,9 @@ public class Recepcionist {
     @Pattern(regexp = "\\d{10,11}", message = "Telefone deve conter 10 ou 11 dígitos")//pesquisar qual o numero maximo
     @Column(nullable = false, length = 11)
     private String telephone;
+
+    public String getPassword() {
+        return password;
+    }
+    
 }

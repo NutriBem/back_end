@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.RecepcionistRepository;
 import com.example.demo.validations.RecepcionistValidation;
 
@@ -16,5 +17,9 @@ public class RecepcionistService {
         this.recepcionistValidation = recepcionistValidation;      
     }
 
+    public void addRecepcionist(Recepcionist recepcionist){
+        recepcionistValidation.AddRecepcionistValidation(recepcionist);
+        recepcionistRepository.save(recepcionist);
+    }
     
 }
