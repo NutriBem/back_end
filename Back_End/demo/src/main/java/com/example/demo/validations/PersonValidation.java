@@ -6,11 +6,16 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.Person;
+import com.example.demo.model.Recepcionist;
+import com.example.demo.repository.RecepcionistRepository;
+
+import jakarta.validation.ValidationException;
 
 @Component
 public class PersonValidation {
     
     List<String> invalidFiels = new ArrayList<>();
+    private RecepcionistRepository recepcionistRepository;
 
     public void create(Person person) {
         // if(isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
@@ -44,5 +49,16 @@ public class PersonValidation {
 
     public boolean isNullOrEmpty(String data) {
         return data.isEmpty() || data == null;
+    }
+
+    private void validateEmailUniqueness(String email) {
+        if (recepcionistRepository.existsByEmail(email)) {
+            throw new ValidationException("Email já está cadastrado");
+        }
+    }
+
+    private void sanitizeTelephone(Recepcionist recepcionist) {
+        String telefoneLimpo = recepcionist.getTelephone().replaceAll("[^\\d]", "");
+        recepcionist.setTelephone(telefoneLimpo);
     }
 }

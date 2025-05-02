@@ -19,4 +19,8 @@ public abstract class Person {
 
     @Column(nullable = false, length = 11)
     private String telephone;
+
+    public String getPassword() {
+        return password;
+    }
 }

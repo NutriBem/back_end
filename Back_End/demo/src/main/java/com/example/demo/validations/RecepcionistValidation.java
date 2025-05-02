@@ -6,10 +6,13 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.Recepcionist;
+import com.example.demo.repository.RecepcionistRepository;
 
 @Component
 public class RecepcionistValidation {
     
+     private RecepcionistRepository recepcionistRepository;
+
     List<String> erros = new ArrayList<>();
 
     public void AddRecepcionistValidation(Recepcionist recepcionist){
@@ -30,4 +33,5 @@ public class RecepcionistValidation {
             throw new IllegalArgumentException(erros.toString());
         }
     }
+
 }
