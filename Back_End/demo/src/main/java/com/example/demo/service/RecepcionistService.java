@@ -15,6 +15,4 @@ public class RecepcionistService {
         this.recepcionistRepository = recepcionistRepository;
         this.recepcionistValidation = recepcionistValidation;      
     }
-
-    
 }

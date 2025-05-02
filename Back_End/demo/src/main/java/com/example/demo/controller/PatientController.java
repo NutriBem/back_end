@@ -30,4 +30,6 @@ public class PatientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    
 }
