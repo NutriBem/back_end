@@ -2,6 +2,8 @@ package com.example.demo.validations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -41,5 +43,9 @@ public class PersonValidation {
 
     public boolean isNullOrEmpty(String data) {
         return data.isEmpty() || data == null;
+    }
+
+    public boolean existsById(UUID id) {
+        return Optional.ofNullable(personRepository.findById(id)).isPresent();
     }
 }

@@ -1,6 +1,13 @@
 package com.example.demo.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.events.Event.ID;
 
 import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
@@ -27,8 +34,12 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
-    public Patient getByCpf(String cpf) {
-        return patientValidation.getByCpf(cpf);
+    public Optional<Patient> getByCpf(String cpf) {
+        return patientRepository.findByCpf(cpf);
+    }
+
+    public List<Patient> getAll() {
+        return patientRepository.findAll();
     }
 
 }
