@@ -13,17 +13,22 @@ public class PatientService {
     private PatientRepository patientRepository;
     private PatientValidation patientValidation;
     private PersonValidation personValidation;
-    
-    public PatientService(PatientRepository patientRepository, PatientValidation patientValidation, PersonValidation personValidation) {
+
+    public PatientService(PatientRepository patientRepository, PatientValidation patientValidation,
+            PersonValidation personValidation) {
         this.patientRepository = patientRepository;
         this.patientValidation = patientValidation;
         this.personValidation = personValidation;
     }
 
-    public void create(Patient patient) {
+    public Patient create(Patient patient) {
         personValidation.create(patient); /* <- validações genéricas */
-        patientValidation.create(patient); /* <- validações específicas do paciente*/
-        patientRepository.save(patient);
+        patientValidation.create(patient); /* <- validações específicas do paciente */
+        return patientRepository.save(patient);
     }
-    
+
+    public Patient getByCpf(String cpf) {
+        return patientValidation.getByCpf(cpf);
+    }
+
 }
