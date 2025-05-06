@@ -28,8 +28,13 @@ public class PersonService {
 
         boolean existsById = personValidation.existsById(id);
 
-        if (existsById) personRepository.deleteById(id);
+        if (existsById)
+            personRepository.deleteById(id);
 
         return existsById;
+    }
+
+    public Optional<Person> login(Person person) {
+        return personValidation.login(person);
     }
 }

@@ -22,14 +22,12 @@ public class PersonValidation {
     List<String> invalidFiels = new ArrayList<>();
 
     public void create(Person person) {
-        if (isNullOrEmpty(person.getEmail()))
-            invalidFiels.add("E-mail");
-        if (isNullOrEmpty(person.getName()))
-            invalidFiels.add("Nome");
-        if (isNullOrEmpty(person.getPassword()))
-            invalidFiels.add("Senha");
-        if (isNullOrEmpty(person.getTelephone()))
-            invalidFiels.add("Telefone");
+        clearInvalidFields();
+        
+        if (isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.getName())) invalidFiels.add("Nome");
+        if (isNullOrEmpty(person.getPassword())) invalidFiels.add("Senha");
+        if (isNullOrEmpty(person.getTelephone())) invalidFiels.add("Telefone");
 
         // inserir as validações de senha
 
@@ -41,11 +39,36 @@ public class PersonValidation {
 
     }
 
+    public boolean existsById(UUID id) {
+        return Optional.ofNullable(personRepository.findById(id)).isPresent();
+    }
+
+    public Optional<Person> login(Person person) {
+        clearInvalidFields();
+
+        if (isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.getPassword())) invalidFiels.add("Senha");
+
+        if (!invalidFiels.isEmpty())
+            throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
+
+        var personOptional = personRepository.findByEmail(person.getEmail());
+
+        if (personOptional.isEmpty())
+            return personOptional;
+
+        if (personOptional.get().getPassword().equals(person.getPassword()))
+            return personOptional;
+
+        return Optional.empty();
+    }
+
     public boolean isNullOrEmpty(String data) {
         return data.isEmpty() || data == null;
     }
 
-    public boolean existsById(UUID id) {
-        return Optional.ofNullable(personRepository.findById(id)).isPresent();
+    public void clearInvalidFields() {
+        if(!invalidFiels.isEmpty()) invalidFiels = new ArrayList<>();
     }
+
 }
