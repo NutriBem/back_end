@@ -31,7 +31,7 @@ public class PersonService {
         if (existsById)
             personRepository.deleteById(id);
 
-        return existsById;
+        return false;
     }
 
     public Optional<Person> login(Person person) {
