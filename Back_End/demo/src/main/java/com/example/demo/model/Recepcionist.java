@@ -27,7 +27,7 @@ public class Recepcionist {
     private String email;
 
     @Column(nullable = false, length = 40)
-    private String password;//Hash com BCrypt
+    private String password;//Hash com BCrypt aplicado
 
     @Pattern(regexp = "\\d{10,11}", message = "Telefone deve conter 10 ou 11 dígitos")//pesquisar qual o numero maximo
     @Column(nullable = false, length = 11)
@@ -37,7 +37,9 @@ public class Recepcionist {
         return password;
     }
 
-
+    public void setPassword(String password){
+        this.password = password;
+    }
 
 }
 

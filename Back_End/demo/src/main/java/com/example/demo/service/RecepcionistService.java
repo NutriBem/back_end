@@ -21,6 +21,16 @@ public class RecepcionistService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Recepcionist cadastroRecepcionist(Recepcionist recepcionist) {
+    
+        recepcionistRepository.existsByEmail(recepcionist.getEmail());
+
+        String senhaCriptografada = passwordEncoder.encode(recepcionist.getPassword());
+        recepcionist.setPassword(senhaCriptografada);
+
+        return recepcionistRepository.save(recepcionist);
+    }
+
     public boolean validarSenha(String email, String senhaDigitada) {
       
         Recepcionist recepcionist = recepcionistRepository.findByEmail(email)
