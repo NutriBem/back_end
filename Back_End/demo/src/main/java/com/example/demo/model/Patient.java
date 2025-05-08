@@ -14,4 +14,12 @@ public class Patient extends Person {
 
     @Column(length = 11, unique = true)
     private String cpf;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    
 }
+
+

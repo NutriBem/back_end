@@ -6,6 +6,8 @@ import com.example.demo.model.Recepcionist;
 
 import jakarta.validation.ValidationException;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @Component
 public class RecepcionistValidation {
     

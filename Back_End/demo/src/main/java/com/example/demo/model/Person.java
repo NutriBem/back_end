@@ -24,12 +24,12 @@ public class Person implements Serializable {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 60, unique = true)
     private String email;
 
     @Column(nullable = false, length = 40)
     private String password;
 
-    @Column(nullable = false, length = 11)
+    @Column(nullable = false, length = 11, unique = true)
     private String telephone;
 }
