@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.controller.dto.PersonLoginDTO;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
@@ -43,22 +44,25 @@ public class PersonValidation {
         return Optional.ofNullable(personRepository.findById(id)).isPresent();
     }
 
-    public Optional<Person> login(Person person) {
+    public Optional<Person> login(PersonLoginDTO person) {
         clearInvalidFields();
 
-        if (isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
-        if (isNullOrEmpty(person.getPassword())) invalidFiels.add("Senha");
+        if (isNullOrEmpty(person.email())) invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.password())) invalidFiels.add("Senha");
 
         if (!invalidFiels.isEmpty())
             throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
 
-        var personOptional = personRepository.findByEmail(person.getEmail());
+        var personOptional = personRepository.findByEmail(person.email());
 
         if (personOptional.isEmpty())
             return personOptional;
 
-        if (personOptional.get().getPassword().equals(person.getPassword()))
+        if (personOptional.get().getPassword().equals(person.password()))
             return personOptional;
+
+
+        personRepository.findByEmail(null);
 
         return Optional.empty();
     }

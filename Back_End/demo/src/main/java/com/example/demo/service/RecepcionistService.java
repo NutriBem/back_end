@@ -10,7 +10,7 @@ import com.example.demo.validations.RecepcionistValidation;
 @Service
 public class RecepcionistService {
     
-    private final RecepcionistRepository recepcionistRepository;
+   /* private final RecepcionistRepository recepcionistRepository;
     private BCryptPasswordEncoder passwordEncoder;
 
     public RecepcionistService(
@@ -38,5 +38,5 @@ public class RecepcionistService {
     
         return passwordEncoder.matches(senhaDigitada, recepcionist.getPassword());
     }
-
+*/
 }

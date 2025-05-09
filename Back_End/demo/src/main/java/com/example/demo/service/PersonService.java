@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.controller.dto.PersonLoginDTO;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.validations.PersonValidation;
@@ -34,7 +35,7 @@ public class PersonService {
         return false;
     }
 
-    public Optional<Person> login(Person person) {
+    public Optional<Person> login(PersonLoginDTO person) {
         return personValidation.login(person);
     }
 }

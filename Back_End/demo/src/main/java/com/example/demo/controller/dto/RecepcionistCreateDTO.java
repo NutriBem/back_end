@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.controller.dto;
 
 import jakarta.validation.constraints.*;
 //para criação das coisas 

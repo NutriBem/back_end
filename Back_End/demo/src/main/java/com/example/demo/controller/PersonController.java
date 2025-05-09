@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.controller.dto.PersonLoginDTO;
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
 
@@ -24,7 +25,7 @@ public class PersonController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Person person) {
+    public ResponseEntity<?> login(@RequestBody PersonLoginDTO person) {
         try {
             var personOptional = personService.login(person);
 
