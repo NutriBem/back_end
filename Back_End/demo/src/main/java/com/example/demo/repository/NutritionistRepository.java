@@ -6,8 +6,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.model.Nutritionist;
-import com.example.demo.model.Patient;
 
 public interface NutritionistRepository extends JpaRepository<Nutritionist, UUID> {
-    Optional<Patient> findByCrm(String crm);
+    Optional<Nutritionist> findByCrm(String crm);
+    Boolean existsByCrm(String crm);
 }

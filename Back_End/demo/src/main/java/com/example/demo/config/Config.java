@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class Config {
    
     //@Value("${cors.allowed-origins}")
-    private String[] allowedOrigins;
+    // private String[] allowedOrigins;
 
     /*
     @Bean
@@ -29,17 +29,17 @@ public class Config {
         };
     }  */
 
-    @Bean
-    public WebMvcConfigurer corsConfig() {
-        return new WebMvcConfigurer() {
+    // @Bean
+    // public WebMvcConfigurer corsConfig() {
+    //     return new WebMvcConfigurer() {
             
-            @Override
-            public void addCorsMappings(CorsRegistry corsRegistry) {
-                corsRegistry.addMapping("/*")
-                            .allowedOrigins("http://localhost:5173")
-                            .allowedMethods("GET", "POST", "PUT", "DELETE")
-                            .allowedHeaders("*");
-            }
-        };
-    }
+    //         @Override
+    //         public void addCorsMappings(CorsRegistry corsRegistry) {
+    //             corsRegistry.addMapping("/*")
+    //                         .allowedOrigins("http://localhost:5173")
+    //                         .allowedMethods("GET", "POST", "PUT", "DELETE")
+    //                         .allowedHeaders("*");
+    //         }
+    //     };
+    // }
 }

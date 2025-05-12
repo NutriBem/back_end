@@ -1,4 +1,4 @@
-package com.example.demo.controller.dto;
+package com.example.demo.dto.receptionist;
 
 import jakarta.validation.constraints.*;
 //para criação das coisas 

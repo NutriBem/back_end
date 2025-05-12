@@ -5,8 +5,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.controller.dto.PersonLoginDTO;
-import com.example.demo.model.Person;
+import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.dto.LoginResponseDto;
+import com.example.demo.dto.PersonResponseDto;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.validations.PersonValidation;
 
@@ -21,21 +22,21 @@ public class PersonService {
         this.personValidation = personValidation;
     }
 
-    public Optional<Person> getById(UUID id) {
-        return personRepository.findById(id);
+    public Optional<PersonResponseDto> getById(UUID id) {
+        return personRepository.findById(id).map(PersonResponseDto::fromEntity);
     }
 
     public boolean deleteById(UUID id) {
 
-        boolean existsById = personValidation.existsById(id);
+        boolean existsById = personRepository.existsById(id);
 
         if (existsById)
             personRepository.deleteById(id);
 
-        return false;
+        return existsById;
     }
 
-    public Optional<Person> login(PersonLoginDTO person) {
-        return personValidation.login(person);
+    public Optional<LoginResponseDto> login(LoginRequestDto person) {
+        return personValidation.login(person).map(LoginResponseDto::fromEntity);
     }
 }

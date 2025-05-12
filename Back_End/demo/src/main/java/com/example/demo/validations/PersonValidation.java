@@ -7,20 +7,18 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.example.demo.controller.dto.PersonLoginDTO;
+import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
 @Component
-public class PersonValidation {
+public class PersonValidation extends Validation{
 
     private PersonRepository personRepository;
 
     public PersonValidation(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
-
-    List<String> invalidFiels = new ArrayList<>();
 
     public void create(Person person) {
         clearInvalidFields();
@@ -40,11 +38,7 @@ public class PersonValidation {
 
     }
 
-    public boolean existsById(UUID id) {
-        return Optional.ofNullable(personRepository.findById(id)).isPresent();
-    }
-
-    public Optional<Person> login(PersonLoginDTO person) {
+    public Optional<Person> login(LoginRequestDto person) {
         clearInvalidFields();
 
         if (isNullOrEmpty(person.email())) invalidFiels.add("E-mail");
@@ -61,18 +55,7 @@ public class PersonValidation {
         if (personOptional.get().getPassword().equals(person.password()))
             return personOptional;
 
-
-        personRepository.findByEmail(null);
-
         return Optional.empty();
-    }
-
-    public boolean isNullOrEmpty(String data) {
-        return data.isEmpty() || data == null;
-    }
-
-    public void clearInvalidFields() {
-        if(!invalidFiels.isEmpty()) invalidFiels = new ArrayList<>();
     }
 
 }

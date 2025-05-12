@@ -8,7 +8,7 @@ import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
 
 @Component
-public class PatientValidation {
+public class PatientValidation extends Validation{
     private PatientRepository patientRepository;
 
     public PatientValidation(PatientRepository patientRepository) {
@@ -30,9 +30,5 @@ public class PatientValidation {
             throw new IllegalArgumentException("Paciente não encontrado.");
 
         return patient.get();
-    }
-
-    public boolean isNullOrEmpty(String data) {
-        return data.isEmpty() || data == null;
     }
 }

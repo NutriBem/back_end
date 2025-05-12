@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.PersonCreateResponseDto;
 import com.example.demo.model.Patient;
 import com.example.demo.repository.PatientRepository;
 import com.example.demo.validations.PatientValidation;
@@ -24,10 +25,10 @@ public class PatientService {
         this.personValidation = personValidation;
     }
 
-    public Patient create(Patient patient) {
+    public PersonCreateResponseDto create(Patient patient) {
         personValidation.create(patient); /* <- validações genéricas */
         patientValidation.create(patient); /* <- validações específicas do paciente */
-        return patientRepository.save(patient);
+        return PersonCreateResponseDto.fromtEntity(patientRepository.save(patient));
     }
 
     public Optional<Patient> getByCpf(String cpf) {
