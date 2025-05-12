@@ -9,34 +9,31 @@ import com.example.demo.validations.RecepcionistValidation;
 
 @Service
 public class RecepcionistService {
-    
-   /* private final RecepcionistRepository recepcionistRepository;
-    private BCryptPasswordEncoder passwordEncoder;
+
+    private PersonService personService;
+    private RecepcionistValidation recepcionistValidation;
+    private RecepcionistRepository recepcionistRepository;
 
     public RecepcionistService(
-        RecepcionistRepository recepcionistRepository,
-        BCryptPasswordEncoder passwordEncoder
+        PersonService personService,
+        RecepcionistValidation recepcionistValidation,
+        RecepcionistRepository recepcionistRepository
     ) {
+        this.personService = personService;
+        this.recepcionistValidation = recepcionistValidation;
         this.recepcionistRepository = recepcionistRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    public Recepcionist cadastroRecepcionist(Recepcionist recepcionist) {
-    
-        recepcionistRepository.existsByEmail(recepcionist.getEmail());
-
-        String senhaCriptografada = passwordEncoder.encode(recepcionist.getPassword());
-        recepcionist.setPassword(senhaCriptografada);
-
-        return recepcionistRepository.save(recepcionist);
+    public Recepcionist crateRecepcionist(Recepcionist recepcionist) {
+        //Validações específicas de recepcionista  recepcionistValidation.AddRecepcionistValidation(recepcionist);
+        
+        return personService.createPerson(recepcionist);
     }
 
     public boolean validarSenha(String email, String senhaDigitada) {
-      
         Recepcionist recepcionist = recepcionistRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Recepcionista não encontrado"));
-    
-        return passwordEncoder.matches(senhaDigitada, recepcionist.getPassword());
+        
+        return personService.validatePassword(senhaDigitada, recepcionist.getPassword());
     }
-*/
 }

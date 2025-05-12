@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.Recepcionist;
 import com.example.demo.service.PersonService;
 import com.example.demo.service.RecepcionistService;
 
@@ -23,8 +24,13 @@ public class RecepcionistController {
         this.personService = personService;        
     }
 
-    // @PostMapping("/login")
-    // public ResponseEntity<?> login(@RequestBody ) {
-    //     // Chama a validarSenha do serviço pá ve se funfa
-    // ////}
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Recepcionist recepcionist) {
+        try {
+            recepcionistService.crateRecepcionist(recepcionist);
+            return ResponseEntity.ok("created successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

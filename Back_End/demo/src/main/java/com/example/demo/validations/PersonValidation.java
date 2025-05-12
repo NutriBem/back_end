@@ -11,6 +11,8 @@ import com.example.demo.controller.dto.PersonLoginDTO;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
+import jakarta.validation.ValidationException;
+
 @Component
 public class PersonValidation {
 
@@ -73,6 +75,12 @@ public class PersonValidation {
 
     public void clearInvalidFields() {
         if(!invalidFiels.isEmpty()) invalidFiels = new ArrayList<>();
+    }
+
+    public void validatePasswordStrength(String password) {
+        if (!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {//falta carater especial
+            throw new ValidationException("A senha deve conter pelo menos 1 letra maiúscula e 1 número");
+        }
     }
 
 }

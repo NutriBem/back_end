@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Entity
@@ -27,9 +28,19 @@ public class Person implements Serializable {
     @Column(nullable = false, length = 60, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 40)
+    @Column(nullable = false, length = 60)
     private String password;
 
+    @Pattern(regexp = "\\d{10,11}", message = "Telefone deve conter 10 ou 11 dígitos")//pesquisar qual o numero maximo
     @Column(nullable = false, length = 11, unique = true)
     private String telephone;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }

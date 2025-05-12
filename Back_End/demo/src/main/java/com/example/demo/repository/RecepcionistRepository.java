@@ -9,6 +9,5 @@ import com.example.demo.model.Recepcionist;
 
 public interface RecepcionistRepository extends JpaRepository<Recepcionist, UUID>{
     Optional<Recepcionist> findByName(String name);
-    boolean existsByEmail(String email);
     Optional<Recepcionist> findByEmail(String email);
 }
