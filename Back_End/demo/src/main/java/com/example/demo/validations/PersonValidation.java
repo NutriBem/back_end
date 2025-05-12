@@ -8,11 +8,12 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.model.Nutritionist;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
 @Component
-public class PersonValidation extends Validation{
+public class PersonValidation extends Validation {
 
     private PersonRepository personRepository;
 
@@ -22,11 +23,15 @@ public class PersonValidation extends Validation{
 
     public void create(Person person) {
         clearInvalidFields();
-        
-        if (isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
-        if (isNullOrEmpty(person.getName())) invalidFiels.add("Nome");
-        if (isNullOrEmpty(person.getPassword())) invalidFiels.add("Senha");
-        if (isNullOrEmpty(person.getTelephone())) invalidFiels.add("Telefone");
+
+        if (isNullOrEmpty(person.getEmail()))
+            invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.getName()))
+            invalidFiels.add("Nome");
+        if (isNullOrEmpty(person.getPassword()))
+            invalidFiels.add("Senha");
+        if (isNullOrEmpty(person.getTelephone()))
+            invalidFiels.add("Telefone");
 
         // inserir as validações de senha
 
@@ -35,14 +40,15 @@ public class PersonValidation extends Validation{
 
         if (personRepository.existsByEmail(person.getEmail()))
             throw new IllegalArgumentException("E-mail já dastrado.");
-
     }
 
     public Optional<Person> login(LoginRequestDto person) {
         clearInvalidFields();
 
-        if (isNullOrEmpty(person.email())) invalidFiels.add("E-mail");
-        if (isNullOrEmpty(person.password())) invalidFiels.add("Senha");
+        if (isNullOrEmpty(person.email()))
+            invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.password()))
+            invalidFiels.add("Senha");
 
         if (!invalidFiels.isEmpty())
             throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
@@ -58,4 +64,13 @@ public class PersonValidation extends Validation{
         return Optional.empty();
     }
 
+    /*
+     * public Nutritionist existsById(UUID id) {
+     * Optional<Person> nutritionistOptional = personRepository.findById(id);
+     * 
+     * 
+     * if (personRepository.findById(id).isPresent())
+     * throw new IllegalArgumentException("Usuário já existe!");
+     * }
+     */
 }

@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,6 +20,6 @@ public class Nutritionist extends Person {
     @Column(nullable = false, unique = true)
     private String crm;
 
-    @OneToMany(mappedBy = "nutritionist")
+    @Transient
     List<Agenda> agendaList;
 }

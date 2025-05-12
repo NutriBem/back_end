@@ -1,5 +1,7 @@
 package com.example.demo.validations;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.Nutritionist;
@@ -17,5 +19,9 @@ public class NutritionistValidation extends Validation {
     public void create(Nutritionist nutritionist) {
         if (nutritionistRepository.existsByCrm(nutritionist.getCrm()))
             throw new IllegalArgumentException("Nutricionista já cadastrado.");
+    }
+
+    public Optional<Nutritionist> findByCrm(String crm) {
+        return nutritionistRepository.findByCrm(crm);
     }
 }
