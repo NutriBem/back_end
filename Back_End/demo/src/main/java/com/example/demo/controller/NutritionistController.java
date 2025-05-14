@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -48,14 +49,14 @@ public class NutritionistController {
         }
     }
 
-
     @GetMapping
     public ResponseEntity<?> getAll() {
         try {
-            return ResponseEntity.ok().body(null);
+            List<NutritionistResponseDto> nutritionistResponseDtos = nutritionistService.getAll();
+            return ResponseEntity.ok().body(nutritionistResponseDtos);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-            // TODO: handle exception
+            return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
+
         }
     }
 }

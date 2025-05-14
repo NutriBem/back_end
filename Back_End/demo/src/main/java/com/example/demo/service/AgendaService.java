@@ -1,7 +1,12 @@
 package com.example.demo.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.agenda.AgendaResponseDto;
 import com.example.demo.dto.agenda.CreateAgendaRequestDto;
 import com.example.demo.model.Agenda;
 import com.example.demo.repository.AgendaRepository;
@@ -32,6 +37,19 @@ public class AgendaService {
         agenda.setNutritionist(nutriotionistOpt.get());
 
         agendaRepository.save(agenda);
+    }
+
+    public List<AgendaResponseDto> getAll() {
+        List<Agenda> agendas = agendaRepository.findAll();
+
+        List<AgendaResponseDto> agendaResponseDtos = agendas.stream()
+                .map(a -> new AgendaResponseDto(
+                        a.getNutritionist().getName(),
+                        a.getLocalDate(),
+                        a.getLocalTime()))
+                .collect(Collectors.toList());
+
+        return agendaResponseDtos;
     }
 
 }

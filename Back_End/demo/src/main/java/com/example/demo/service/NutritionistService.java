@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -45,5 +48,15 @@ public class NutritionistService {
                 nutritionistOptinal.get().getTelephone());
 
         return response;
+    }
+
+    public List<NutritionistResponseDto> getAll() {
+        List<Nutritionist> nutritionists = nutritionistRepository.findAll();
+
+        List<NutritionistResponseDto> nutritionistResponseDtos = nutritionists.stream()
+                .map(n -> new NutritionistResponseDto(n.getCrm(), n.getName(), n.getEmail(), n.getTelephone()))
+                .collect(Collectors.toList());
+
+        return nutritionistResponseDtos;
     }
 }
