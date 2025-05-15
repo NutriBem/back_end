@@ -14,11 +14,8 @@ import lombok.Data;
 @Table(name = "tb_recepcionist")
 @Entity
 @Data
-public class Recepcionist {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+public class Recepcionist extends Person{
+
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -40,5 +37,6 @@ public class Recepcionist {
     public void setPassword(String password){
         this.password = password;
     }
+
 }
 

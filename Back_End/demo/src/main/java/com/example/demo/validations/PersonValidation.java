@@ -8,9 +8,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.errs.ValidationException;
 import com.example.demo.model.Nutritionist;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
+
 @Component
 public class PersonValidation extends Validation {
 
@@ -63,13 +65,10 @@ public class PersonValidation extends Validation {
         return Optional.empty();
     }
 
-    /*
-     * public Nutritionist existsById(UUID id) {
-     * Optional<Person> nutritionistOptional = personRepository.findById(id);
-     * 
-     * 
-     * if (personRepository.findById(id).isPresent())
-     * throw new IllegalArgumentException("Usuário já existe!");
-     * }
-     */
+    public void validatePasswordStrength(String password) {
+        if (!password.matches("^(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$")) {//falta carater especial
+            throw new jakarta.validation.ValidationException("A senha deve conter pelo menos 1 letra maiúscula e 1 número");
+        }
+    }
+
 }
