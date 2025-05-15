@@ -1,15 +1,10 @@
 package com.example.demo.validations;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.LoginRequestDto;
-import com.example.demo.errs.ValidationException;
-import com.example.demo.model.Nutritionist;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
