@@ -1,0 +1,13 @@
+package com.example.demo.repository;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.demo.model.Nutritionist;
+
+public interface NutritionistRepository extends JpaRepository<Nutritionist, UUID> {
+    Optional<Nutritionist> findByCrm(String crm);
+    Boolean existsByCrm(String crm);
+}

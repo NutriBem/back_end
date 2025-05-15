@@ -1,8 +1,13 @@
 package com.example.demo.model;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,16 +15,11 @@ import lombok.EqualsAndHashCode;
 @Entity
 @PrimaryKeyJoinColumn(name = "id")
 @EqualsAndHashCode(callSuper = false)
-public class Patient extends Person {
-
-    @Column(length = 11, unique = true)
-    private String cpf;
-
-    public String getCpf() {
-        return cpf;
-    }
-
+public class Nutritionist extends Person {
     
+    @Column(nullable = false, unique = true)
+    private String crm;
+
+    @Transient
+    List<Agenda> agendaList;
 }
-
-

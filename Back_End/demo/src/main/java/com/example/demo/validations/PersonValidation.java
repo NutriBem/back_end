@@ -2,63 +2,74 @@ package com.example.demo.validations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.model.Nutritionist;
 import com.example.demo.model.Person;
-import com.example.demo.model.Recepcionist;
-import com.example.demo.repository.RecepcionistRepository;
-
-import jakarta.validation.ValidationException;
-
+import com.example.demo.repository.PersonRepository;
 @Component
-public class PersonValidation {
-    
-    List<String> invalidFiels = new ArrayList<>();
-    private RecepcionistRepository recepcionistRepository;
+public class PersonValidation extends Validation {
+
+    private PersonRepository personRepository;
+
+    public PersonValidation(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
 
     public void create(Person person) {
-        // if(isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
-        // if(isNullOrEmpty(person.getName())) invalidFiels.add("Nome");
-        // if(isNullOrEmpty(person.getPassword())) invalidFiels.add("Senha");
-        // if(isNullOrEmpty(person.getTelephone())) invalidFiels.add("Telefone");
+        clearInvalidFields();
 
-        
+        if (isNullOrEmpty(person.getEmail()))
+            invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.getName()))
+            invalidFiels.add("Nome");
+        if (isNullOrEmpty(person.getPassword()))
+            invalidFiels.add("Senha");
+        if (isNullOrEmpty(person.getTelephone()))
+            invalidFiels.add("Telefone");
 
-        if(!person.getPassword().matches(".*[A-Z].*")){
-            invalidFiels.add("Deve conter letras maiusculas");
-        }
+        // inserir as validações de senha
 
-        System.out.println(person.getPassword());
+        if (!invalidFiels.isEmpty())
+            throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
 
-        // if (!person.getPassword().matches("(?=.*[@])")) {//falta carater especial (?=.*[!@#$%^&*()_+\\-=\$$\$${};':\"|,.<>?]).{8,}$") 
-        //     invalidFiels.add("Deve conter @");
-        // }
-        // if(!person.getPassword().matches("(?=.*\\\\d).{8,}$")){
-        //     invalidFiels.add("Deve conter número");
-        // }
-
-
-        if(!invalidFiels.isEmpty()) {
-            invalidFiels.remove(invalidFiels.size() - 1);
-            throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);  
-        } 
-
-        
+        if (personRepository.existsByEmail(person.getEmail()))
+            throw new IllegalArgumentException("E-mail já dastrado.");
     }
 
-    public boolean isNullOrEmpty(String data) {
-        return data.isEmpty() || data == null;
+    public Optional<Person> login(LoginRequestDto person) {
+        clearInvalidFields();
+
+        if (isNullOrEmpty(person.email()))
+            invalidFiels.add("E-mail");
+        if (isNullOrEmpty(person.password()))
+            invalidFiels.add("Senha");
+
+        if (!invalidFiels.isEmpty())
+            throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
+
+        var personOptional = personRepository.findByEmail(person.email());
+
+        if (personOptional.isEmpty())
+            return personOptional;
+
+        if (personOptional.get().getPassword().equals(person.password()))
+            return personOptional;
+
+        return Optional.empty();
     }
 
-    private void validateEmailUniqueness(String email) {
-        if (recepcionistRepository.existsByEmail(email)) {
-            throw new ValidationException("Email já está cadastrado");
-        }
-    }
-
-    private void sanitizeTelephone(Recepcionist recepcionist) {
-        String telefoneLimpo = recepcionist.getTelephone().replaceAll("[^\\d]", "");
-        recepcionist.setTelephone(telefoneLimpo);
-    }
+    /*
+     * public Nutritionist existsById(UUID id) {
+     * Optional<Person> nutritionistOptional = personRepository.findById(id);
+     * 
+     * 
+     * if (personRepository.findById(id).isPresent())
+     * throw new IllegalArgumentException("Usuário já existe!");
+     * }
+     */
 }

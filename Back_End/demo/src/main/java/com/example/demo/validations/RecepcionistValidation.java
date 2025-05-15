@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.RecepcionistRepository;
 
+
 @Component
 public class RecepcionistValidation {
     
