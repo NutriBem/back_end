@@ -44,4 +44,10 @@ public class Person implements Serializable {
         this.password = password;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    
+
 }

@@ -44,8 +44,8 @@ public class PersonService {
         return existsById;
     }
 
-    public Optional<LoginResponseDto> login(LoginRequestDto person) {
-        return personValidation.login(person).map(LoginResponseDto::fromEntity);
+    public Optional<Person> login(LoginRequestDto loginRequest) {
+        return personValidation.login(loginRequest, passwordEncoder);
     }
 
     protected <T extends Person> T createPerson(T person) {
