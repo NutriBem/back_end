@@ -34,10 +34,9 @@ public class AgendaService {
         if (nutriotionistOpt.isEmpty())
             throw new IllegalArgumentException("Médico não encontrado.");
 
-        // implement validation from agenda
-        // Um horáio de agendamento deve ter um interválo de no mínimo 1 hora dos demais
-        // horários
-        // agendaValidation.create();
+        // Validations
+        System.out.println("Service");
+        agendaValidation.create(data, nutriotionistOpt.get());
 
         Agenda agenda = new Agenda();
         agenda.setLocalDate(data.localDate());
