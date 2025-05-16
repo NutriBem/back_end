@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.LoginResponseDto;
@@ -59,4 +60,37 @@ public class PersonService {
     public boolean validatePassword(String rawPassword, String encodedPassword) {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
+
+   @Transactional
+   public <T extends Person> T updatePerson(UUID id, T updatePerson){
+     Person existingPerson = personRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+
+        if (!existingPerson.getClass().isInstance(updatePerson)) {
+        throw new IllegalArgumentException("Tipo de pessoa incompatível para atualização");
+        }
+
+        updateFields(existingPerson, updatePerson);
+
+        personValidation.validatePersonUpdate(updatePerson);
+
+        @SuppressWarnings("unchecked")
+        T savedPerson = (T) personRepository.save(existingPerson);
+    
+    return savedPerson;
+   }
+
+   private <T extends Person> void updateFields(T existP, T updateP){
+        existP.setName(updateP.getName());
+        existP.setEmail(updateP.getEmail());
+        existP.setTelephone(updateP.getTelephone());
+   }
+
+   public void updatePassword(UUID id, String newPassword){
+    Person person = personRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+
+    person.setPassword(passwordEncoder.encode(newPassword));
+    personRepository.save(person);
+   }
 }

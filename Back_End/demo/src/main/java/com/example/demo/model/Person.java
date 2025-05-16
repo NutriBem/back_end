@@ -31,7 +31,7 @@ public class Person implements Serializable {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @Pattern(regexp = "\\d{10,11}", message = "Telefone deve conter 10 ou 11 dígitos")//pesquisar qual o numero maximo
+    //@Pattern(regexp = "\\d{10,11}", message = "Telefone deve conter 10 ou 11 dígitos")//pesquisar qual o numero maximo
     @Column(nullable = false, length = 11, unique = true)
     private String telephone;
 
@@ -46,6 +46,30 @@ public class Person implements Serializable {
 
     public UUID getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 
     

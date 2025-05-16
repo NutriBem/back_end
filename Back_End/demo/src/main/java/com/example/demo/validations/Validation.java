@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.model.Person;
+
 @Component
 public class Validation {
     List<String> invalidFiels = new ArrayList<>();
@@ -16,5 +18,11 @@ public class Validation {
     public void clearInvalidFields() {
         if (!invalidFiels.isEmpty())
             invalidFiels = new ArrayList<>();
+    }
+
+    public void validatePersonUpdate(Person person){
+        if(person.getEmail() != null){
+            throw new IllegalStateException("Email já está em uso por alguem!");
+        }
     }
 }

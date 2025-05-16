@@ -5,11 +5,13 @@ import java.util.Optional;
 
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -70,5 +72,31 @@ public class PersonController {
         }
     }
 
-    //editar todos
+    //editar
+    @PutMapping("edit/{id}")
+    public ResponseEntity<?> update(@PathVariable("id") UUID id, @RequestBody Person updatPerson){
+        try {
+            Person updated = personService.updatePerson(id, updatPerson);
+            return ResponseEntity.ok(updated);
+        } 
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/ChangePassword")
+    public ResponseEntity<?> updatePassword(@PathVariable("id") UUID id, @RequestBody String newPassword){
+        try {
+            personService.updatePassword(id, newPassword);
+            return ResponseEntity.ok("Senha alterada com sucesso");   
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar: " + e.getMessage());
+        }
+    }
 }
