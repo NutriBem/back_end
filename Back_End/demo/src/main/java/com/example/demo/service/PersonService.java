@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.LoginRequestDto;
-import com.example.demo.dto.LoginResponseDto;
 import com.example.demo.dto.PersonResponseDto;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
