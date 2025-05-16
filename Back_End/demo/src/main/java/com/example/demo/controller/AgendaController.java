@@ -29,8 +29,8 @@ public class AgendaController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody CreateAgendaRequestDto data) {
         try {
-            agendaService.create(data);
-            return ResponseEntity.status(201).body("Agenda criada com sucesso.");
+            CreateAgendaRequestDto response = agendaService.create(data);
+            return ResponseEntity.status(201).body(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
         }

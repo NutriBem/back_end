@@ -28,14 +28,12 @@ public class AgendaService {
         this.agendaValidation = agendaValidation;
     }
 
-    public void create(CreateAgendaRequestDto data) {
+    public CreateAgendaRequestDto create(CreateAgendaRequestDto data) {
         var nutriotionistOpt = nutritionistValidation.findByCrm(data.crm());
 
         if (nutriotionistOpt.isEmpty())
             throw new IllegalArgumentException("Médico não encontrado.");
 
-        // Validations
-        System.out.println("Service");
         agendaValidation.create(data, nutriotionistOpt.get());
 
         Agenda agenda = new Agenda();
@@ -44,6 +42,9 @@ public class AgendaService {
         agenda.setNutritionist(nutriotionistOpt.get());
 
         agendaRepository.save(agenda);
+
+        return CreateAgendaRequestDto.fromtEntity(agenda.getNutritionist().getCrm(), agenda.getLocalDate(),
+                agenda.getLocalTime());
     }
 
     public List<AgendaResponseDto> getAgendaByCrmNutritionist(String id) {

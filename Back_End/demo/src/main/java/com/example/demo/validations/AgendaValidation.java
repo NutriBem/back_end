@@ -2,7 +2,6 @@ package com.example.demo.validations;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,6 @@ public class AgendaValidation extends Validation {
     public void create(CreateAgendaRequestDto data, Nutritionist nutritionist) {
         List<Agenda> agendaByNutritionist = agendaRepository.findByNutritionist(nutritionist);
 
-        System.out.println(agendaByNutritionist);
         for (Agenda agenda : agendaByNutritionist) {
 
             if (agenda.getLocalDate().equals(data.localDate())) {
@@ -38,5 +36,4 @@ public class AgendaValidation extends Validation {
         }
 
     }
-
 }
