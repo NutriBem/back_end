@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,21 +19,18 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    // @OneToMany
-    // @JoinColumn(name = "id")
-    // @Column(name = "fk_patient", nullable = false)
-    // private Patient fkPatient;
 
-    // @OneToOne
-    // @JoinColumn(name = "id")
-    // @Column(name = "fk_agenda", nullable = false)
-    // private Agenda fkAgenda;
+    @ManyToOne
+    @JoinColumn(name = "fk_paciente")
+    private Patient fkPatient;
 
-    // @OneToMany
-    // @JoinColumn(name = "id")
-    // @Column(name = "fk_receptionst", nullable = true)
-    // private Recepcionist fkReceptionis;
+    @OneToOne
+    @JoinColumn(name = "fk_agenda")
+    private Agenda fkAgenda;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "fk_receptionist", nullable = true)
+    private Recepcionist fkReceptionist;
 
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;

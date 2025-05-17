@@ -31,6 +31,5 @@ public class Agenda {
     @Column(name = "local_time")
     private LocalTime localTime;
 
-    @Column(insertable = true)
-    private Boolean disponibility;
+    private boolean disponibility = true;
 }

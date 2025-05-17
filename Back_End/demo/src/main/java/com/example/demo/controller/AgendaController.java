@@ -40,7 +40,7 @@ public class AgendaController {
     @GetMapping("{crm}")
     public ResponseEntity<?> getAgendaByNutritionist(@PathVariable("crm") String crm) {
         try {
-            var responseDto = agendaService.getAgendaByCrmNutritionist(crm);
+            List<AgendaResponseDto> responseDto = agendaService.getAgendaByCrmNutritionist(crm);
             return ResponseEntity.ok().body(responseDto);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

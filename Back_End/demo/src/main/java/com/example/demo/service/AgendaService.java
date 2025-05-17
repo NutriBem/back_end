@@ -56,12 +56,11 @@ public class AgendaService {
         List<Agenda> agendas = agendaRepository.findByNutritionist(nutricionistOpt.get());
 
         // Irei reaproveitar esse método depois
-        List<AgendaResponseDto> agendaResponseDtos = agendas.stream()
-                .map(a -> new AgendaResponseDto(
-                        a.getNutritionist().getName(),
-                        a.getLocalDate(),
-                        a.getLocalTime()))
-                .collect(Collectors.toList());
+        List<AgendaResponseDto> agendaResponseDtos = agendas.stream().map(a -> new AgendaResponseDto(
+                a.getNutritionist().getName(),
+                a.getLocalDate(),
+                a.getLocalTime(),
+                a.isDisponibility())).collect(Collectors.toList());
 
         return agendaResponseDtos;
     }
@@ -73,8 +72,8 @@ public class AgendaService {
                 .map(a -> new AgendaResponseDto(
                         a.getNutritionist().getName(),
                         a.getLocalDate(),
-                        a.getLocalTime()))
-                .collect(Collectors.toList());
+                        a.getLocalTime(),
+                        a.isDisponibility())).collect(Collectors.toList());
 
         return agendaResponseDtos;
     }
