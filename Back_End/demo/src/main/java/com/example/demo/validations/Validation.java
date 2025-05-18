@@ -3,14 +3,18 @@ package com.example.demo.validations;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.errs.TypeError;
-import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
 @Component
 public class Validation {
+
+    @Autowired
+    PersonRepository personRepository;
+
     List<TypeError> invalidFiels = new ArrayList<>();
 
     public void isNullOrEmpty(TypeError... typeErrors) {
@@ -18,7 +22,7 @@ public class Validation {
 
         // Percorre o array de valor recebidos
         for (TypeError data : typeErrors) {
-            if(data.value().isEmpty() || data.value() == null) {
+            if (data.value().isEmpty() || data.value() == null) {
                 invalidFiels.add(data);
                 System.out.println("OI");
             }
@@ -33,7 +37,7 @@ public class Validation {
     }
 
     public void validatePersonUpdate(String email) {
-         if (PersonRepository.existsByEmail(email)) {
+         if (personRepository.existsByEmail(email)) {
         throw new IllegalStateException("Email já está em uso por outro usuário");
         }
     }
