@@ -9,7 +9,9 @@ public record AgendaResponseDto(String nutriName, LocalDate date, LocalTime time
 
     public static AgendaResponseDto fromEntity(Agenda agenda) {
         return new AgendaResponseDto(
-            agenda.getNutritionist().getName(),
-            agenda.getLocalDate() ,agenda.getLocalTime(),agenda.isDisponibility());
+                agenda.getNutritionist().getName(),
+                agenda.getLocalDate(),
+                agenda.getLocalTime(),
+                agenda.isDisponibility());
     }
 }
