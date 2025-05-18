@@ -23,7 +23,9 @@ import com.example.demo.service.PersonService;
 public class PersonController {
 
     private PersonService personService;
-    public record LoginResponse(Object data, String error) {}
+
+    public record LoginResponse(Object data, String error) {
+    }
 
     public PersonController(PersonService personService) {
         this.personService = personService;
@@ -46,15 +48,15 @@ public class PersonController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
         try {
             Optional<Person> loginResp = personService.login(loginRequestDto);
-            
+
             return loginResp
-            .map(person -> ResponseEntity.ok(new LoginResponse(person.getId(), null)))
-            .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new LoginResponse(null, "E-mail e/ou senha inválidos.")));
-                
+                    .map(person -> ResponseEntity.ok(new LoginResponse(person.getId(), null)))
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                            .body(new LoginResponse(null, "E-mail e/ou senha inválidos.")));
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -72,30 +74,27 @@ public class PersonController {
         }
     }
 
-    //editar
+    // editar
     @PutMapping("edit/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") UUID id, @RequestBody Person updatPerson){
+    public ResponseEntity<?> update(@PathVariable("id") UUID id, @RequestBody Person updatPerson) {
         try {
             Person updated = personService.updatePerson(id, updatPerson);
             return ResponseEntity.ok(updated);
-        } 
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar: " + e.getMessage());
         }
     }
 
     @PutMapping("/{id}/ChangePassword")
-    public ResponseEntity<?> updatePassword(@PathVariable("id") UUID id, @RequestBody String newPassword){
+    public ResponseEntity<?> updatePassword(@PathVariable("id") UUID id, @RequestBody String newPassword) {
         try {
             personService.updatePassword(id, newPassword);
-            return ResponseEntity.ok("Senha alterada com sucesso");   
-        } catch (IllegalArgumentException e){
+            return ResponseEntity.ok("Senha alterada com sucesso");
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar: " + e.getMessage());
         }
     }

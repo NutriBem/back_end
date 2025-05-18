@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
+import com.example.demo.model.Patient;
 import com.example.demo.model.Person;
+import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.validations.PersonValidation;
 
@@ -21,10 +23,9 @@ public class PersonService {
     private PasswordEncoder passwordEncoder;
 
     public PersonService(
-        PersonRepository personRepository, 
-        PersonValidation personValidation,
-        PasswordEncoder passwordEncoder
-        ){
+            PersonRepository personRepository,
+            PersonValidation personValidation,
+            PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.personValidation = personValidation;
         this.passwordEncoder = passwordEncoder;
@@ -50,9 +51,9 @@ public class PersonService {
 
     protected <T extends Person> T createPerson(T person) {
         personValidation.validatePasswordStrength(person.getPassword());
-        
+
         person.setPassword(passwordEncoder.encode(person.getPassword()));
-        
+
         return personRepository.save(person);
     }
 
@@ -60,36 +61,48 @@ public class PersonService {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
-   @Transactional
-   public <T extends Person> T updatePerson(UUID id, T updatePerson){
-     Person existingPerson = personRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+    @Transactional
+    public <T extends Person> T updatePerson(UUID id, T updatePerson) {
+        Person existingPerson = personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
 
-        if (!existingPerson.getClass().isInstance(updatePerson)) {
-        throw new IllegalArgumentException("Tipo de pessoa incompatível para atualização");
+        System.out.println(existingPerson.getName()); // Correto!
+
+        if (existingPerson.getClass().getName().equals(Recepcionist.class.getName())) {
+            throw new IllegalArgumentException("Tipo de pessoa incompatível para atualização");
         }
 
-        updateFields(existingPerson, updatePerson);
+        // {
+        // "name": "tesste",
+        // "email": "testedsads6",
+        // "telephone": "123457894"
+        // }
 
-        personValidation.validatePersonUpdate(updatePerson);
+        Person newPerson = updateFields(existingPerson, updatePerson);
+
+       // personValidation.validatePersonUpdate(updatePerson); CORRIGIR
+
+        System.out.println("NEW PERSON:" + newPerson);
 
         @SuppressWarnings("unchecked")
-        T savedPerson = (T) personRepository.save(existingPerson);
-    
-    return savedPerson;
-   }
+        T savedPerson = (T) personRepository.save(newPerson);
 
-   private <T extends Person> void updateFields(T existP, T updateP){
+        return savedPerson;
+    }
+
+    private <T extends Person> T updateFields(T existP, T updateP) {
         existP.setName(updateP.getName());
         existP.setEmail(updateP.getEmail());
         existP.setTelephone(updateP.getTelephone());
-   }
 
-   public void updatePassword(UUID id, String newPassword){
-    Person person = personRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+        return existP;
+    }
 
-    person.setPassword(passwordEncoder.encode(newPassword));
-    personRepository.save(person);
-   }
+    public void updatePassword(UUID id, String newPassword) {
+        Person person = personRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+
+        person.setPassword(passwordEncoder.encode(newPassword));
+        personRepository.save(person);
+    }
 }
