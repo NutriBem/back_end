@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.errs.TypeError;
 import com.example.demo.model.Person;
+import com.example.demo.repository.PersonRepository;
 
 @Component
 public class Validation {
@@ -31,9 +32,9 @@ public class Validation {
             invalidFiels = new ArrayList<>();
     }
 
-    public void validatePersonUpdate(Person person) {
-        if (person.getEmail() != null) {
-            throw new IllegalStateException("Email já está em uso por alguem!");
+    public void validatePersonUpdate(String email) {
+         if (PersonRepository.existsByEmail(email)) {
+        throw new IllegalStateException("Email já está em uso por outro usuário");
         }
     }
 

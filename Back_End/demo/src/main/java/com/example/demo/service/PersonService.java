@@ -80,7 +80,10 @@ public class PersonService {
 
         Person newPerson = updateFields(existingPerson, updatePerson);
 
-       // personValidation.validatePersonUpdate(updatePerson); CORRIGIR
+       // personValidation.validatePersonUpdate(updatePerson); CORRIGIr
+        // if (!existingPerson.getEmail().equals(updatedPerson.getEmail())) {
+        // validateEmail(updatedPerson.getEmail());
+        // }
 
         System.out.println("NEW PERSON:" + newPerson);
 
