@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collector;
+
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +13,6 @@ import com.example.demo.model.Appointment;
 import com.example.demo.model.Patient;
 import com.example.demo.repository.AgendaRepository;
 import com.example.demo.repository.AppointmentRepository;
-import com.example.demo.repository.PatientRepository;
 import com.example.demo.validations.AgendaValidation;
 import com.example.demo.validations.AppointmentValidation;
 import com.example.demo.validations.PatientValidation;

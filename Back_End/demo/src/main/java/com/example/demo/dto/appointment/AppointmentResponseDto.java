@@ -17,5 +17,4 @@ public record AppointmentResponseDto(Long id, String cpf, String crm, LocalDate 
                 appointment.getFkAgenda().getLocalTime(),
                 appointment.getAppointmentDate());
     }
-
 }

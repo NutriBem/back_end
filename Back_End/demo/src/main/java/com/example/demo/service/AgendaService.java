@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.agenda.AgendaResponseDto;
 import com.example.demo.dto.agenda.CreateAgendaRequestDto;
 import com.example.demo.model.Agenda;
-import com.example.demo.model.Nutritionist;
 import com.example.demo.repository.AgendaRepository;
 import com.example.demo.validations.AgendaValidation;
 import com.example.demo.validations.NutritionistValidation;

@@ -17,11 +17,10 @@ import com.example.demo.service.RecepcionistService;
 public class RecepcionistController {
     
     private RecepcionistService recepcionistService;
-    private PersonService personService;
     
-    public RecepcionistController(RecepcionistService recepcionistService, PersonService personService){
+    public RecepcionistController(RecepcionistService recepcionistService){
         this.recepcionistService = recepcionistService;
-        this.personService = personService;        
+  
     }
 
     @PostMapping
