@@ -5,14 +5,25 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.errs.TypeError;
 import com.example.demo.model.Person;
 
 @Component
 public class Validation {
-    List<String> invalidFiels = new ArrayList<>();
+    List<TypeError> invalidFiels = new ArrayList<>();
 
-    public boolean isNullOrEmpty(String data) {
-        return data.isEmpty() || data == null;
+    public void isNullOrEmpty(TypeError... typeErrors) {
+        clearInvalidFields(); // Limpa a lista de campos inválidos
+
+        // Percorre o array de valor recebidos
+        for (TypeError data : typeErrors) {
+            if(data.value().isEmpty() || data.value() == null) {
+                invalidFiels.add(data);
+                System.out.println("OI");
+            }
+        }
+        System.out.println(invalidFiels);
+        showInvalidFields(); // Exibe todos os valores inválidos
     }
 
     public void clearInvalidFields() {
@@ -20,9 +31,15 @@ public class Validation {
             invalidFiels = new ArrayList<>();
     }
 
-    public void validatePersonUpdate(Person person){
-        if(person.getEmail() != null){
+    public void validatePersonUpdate(Person person) {
+        if (person.getEmail() != null) {
             throw new IllegalStateException("Email já está em uso por alguem!");
         }
+    }
+
+    // Exibe os campos inválidos tenha alguma valor na lista
+    public void showInvalidFields() {
+        if (!invalidFiels.isEmpty())
+            throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
     }
 }

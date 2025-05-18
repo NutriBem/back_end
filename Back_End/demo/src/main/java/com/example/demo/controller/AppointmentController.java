@@ -19,13 +19,14 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity create(@RequestBody AppointmentCreateRequestDto appointment) {
+    public void create(@RequestBody AppointmentCreateRequestDto appointment) {
         try {
-            
+            System.out.println("Controller");
+           ResponseEntity.ok().body(appointmentService.create(appointment)); 
+
         } catch (Exception e) {
-            
+            System.out.println(e.getMessage());
         }
-        return null;
     }
 
 }

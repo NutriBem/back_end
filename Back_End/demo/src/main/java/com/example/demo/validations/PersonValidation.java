@@ -1,13 +1,12 @@
 package com.example.demo.validations;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.errs.TypeError;
 import com.example.demo.model.Person;
 import com.example.demo.repository.PersonRepository;
 
@@ -23,17 +22,11 @@ public class PersonValidation extends Validation {
     }
 
     public void create(Person person) {
-        clearInvalidFields();
-
-        if (isNullOrEmpty(person.getEmail())) invalidFiels.add("E-mail");
-        if (isNullOrEmpty(person.getName())) invalidFiels.add("Nome");
-        if (isNullOrEmpty(person.getPassword())) invalidFiels.add("Senha");
-        if (isNullOrEmpty(person.getTelephone())) invalidFiels.add("Telefone");
-
-        // inserir as validações de senha
-
-        if (!invalidFiels.isEmpty())
-            throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
+        isNullOrEmpty(
+                new TypeError("Informe o e-mail", person.getEmail()),
+                new TypeError("Informe o nome", person.getName()),
+                new TypeError("Informe a Senha", person.getPassword()),
+                new TypeError("Informe o telefone", person.getTelephone()));
 
         if (personRepository.existsByEmail(person.getEmail()))
             throw new IllegalArgumentException("E-mail já dastrado.");
@@ -42,14 +35,9 @@ public class PersonValidation extends Validation {
     public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
         clearInvalidFields();
 
-        // validação obrigatoria]
-        if (isNullOrEmpty(loginRequestDto.email()))
-            invalidFiels.add("E-mail invalido");
-        if (isNullOrEmpty(loginRequestDto.password()))
-            invalidFiels.add("Senha invalida");
-
-        if (!invalidFiels.isEmpty())
-            throw new IllegalArgumentException("Campos invalidos! " + invalidFiels);
+        isNullOrEmpty(
+                new TypeError("Informe o E-mail.", loginRequestDto.email()),
+                new TypeError("Informe a senha", loginRequestDto.password()));
 
         // busca email
         Optional<Person> personEmail = personRepository.findByEmail(loginRequestDto.email());

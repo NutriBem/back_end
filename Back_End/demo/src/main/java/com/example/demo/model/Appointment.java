@@ -11,11 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+@Data
 @Entity
-@Table
+@Table(name = "appointment")
 public class Appointment {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +34,7 @@ public class Appointment {
     @JoinColumn(name = "fk_receptionist", nullable = true)
     private Recepcionist fkReceptionist;
 
-    @Column(name = "appointment_date", nullable = false)
+    @Column(name = "appointment_date", insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime appointmentDate;
-    
+
 }
