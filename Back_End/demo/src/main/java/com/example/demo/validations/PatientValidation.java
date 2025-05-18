@@ -1,6 +1,7 @@
 package com.example.demo.validations;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -24,12 +25,22 @@ public class PatientValidation extends Validation {
     }
 
     public Patient getByCpf(String cpf) {
-
         isNullOrEmpty(new TypeError("Informe o CPF", cpf));
-        // if(isNullOrEmpty(cpf))
-        // throw new IllegalArgumentException("Informe o CPF");
 
         Optional<Patient> patient = patientRepository.findByCpf(cpf);
+
+        if (!patient.isPresent())
+            throw new IllegalArgumentException("Paciente não encontrado.");
+
+        return patient.get();
+    }
+
+    public Patient getById(String id) {
+        isNullOrEmpty(new TypeError("Informe o CPF", id));
+
+        UUID idToUuid = UUID.fromString(id); 
+
+        Optional<Patient> patient = patientRepository.findById(idToUuid);
 
         if (!patient.isPresent())
             throw new IllegalArgumentException("Paciente não encontrado.");
