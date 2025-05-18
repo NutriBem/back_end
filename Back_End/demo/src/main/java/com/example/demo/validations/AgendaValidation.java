@@ -2,6 +2,7 @@ package com.example.demo.validations;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -34,6 +35,14 @@ public class AgendaValidation extends Validation {
                     throw new IllegalArgumentException("Horário não disponível.");
             }
         }
+    }
 
+    public Agenda findById(Long id) {
+       Optional<Agenda> agendaOptional = agendaRepository.findById(id);
+
+        if(agendaOptional.isEmpty())
+            throw new IllegalArgumentException("Agenda não encontrada");
+
+        return agendaOptional.get();
     }
 }

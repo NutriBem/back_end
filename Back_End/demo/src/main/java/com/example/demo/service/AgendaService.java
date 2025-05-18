@@ -77,5 +77,4 @@ public class AgendaService {
 
         return agendaResponseDtos;
     }
-
 }
