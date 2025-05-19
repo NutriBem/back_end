@@ -14,8 +14,6 @@ import com.example.demo.validations.PersonValidation;
 
 @Service
 public class RecepcionistService {
-
-
     private PersonService personService;
     private RecepcionistValidation recepcionistValidation;
     private RecepcionistRepository recepcionistRepository;

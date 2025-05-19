@@ -19,19 +19,22 @@ public class NutritionistService {
     private NutritionistRepository nutritionistRepository;
     private NutritionistValidation nutritionistValidation;
     private PersonValidation personValidation;
+    private PersonService personService;
 
     public NutritionistService(NutritionistRepository nutritionistRepository,
-            NutritionistValidation nutritionistValidation, PersonValidation personValidation) {
+            NutritionistValidation nutritionistValidation, PersonValidation personValidation, PersonService personService) {
         this.nutritionistRepository = nutritionistRepository;
         this.nutritionistValidation = nutritionistValidation;
         this.personValidation = personValidation;
+        this.personService = personService;
     }
 
     public PersonCreateResponseDto create(Nutritionist nutritionist) {
         personValidation.create(nutritionist);
         nutritionistValidation.create(nutritionist);
-
-        return PersonCreateResponseDto.fromtEntity(nutritionistRepository.save(nutritionist));
+        personValidation.validatePasswordStrength(nutritionist.getPassword());
+        
+        return PersonCreateResponseDto.fromtEntity(personService.createPerson(nutritionist));
     }
 
     public NutritionistResponseDto getByCrm(String crm) {

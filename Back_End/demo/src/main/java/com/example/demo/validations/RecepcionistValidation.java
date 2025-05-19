@@ -9,6 +9,4 @@ import com.example.demo.repository.RecepcionistRepository;
 public class RecepcionistValidation {
     
      private RecepcionistRepository recepcionistRepository;
-
-
 }

@@ -53,8 +53,6 @@ public class AppointmentService {
 
         Appointment saveAppointment = appointmentRepository.save(newAppointment);
 
-        System.out.println(saveAppointment);
-
         AppointmentResponseDto response = AppointmentResponseDto.fromResponseDto(saveAppointment);
 
         return response;
@@ -67,5 +65,14 @@ public class AppointmentService {
                 .map(a -> AppointmentResponseDto.fromResponseDto(a)).collect(Collectors.toList());
 
         return appointmentResponseDtos;
+    }
+
+    public AppointmentResponseDto getById(Long id) {
+        Appointment appointment = appointmentValidation.findById(id);
+        return AppointmentResponseDto.fromResponseDto(appointment);
+    }
+
+    public void deleteById(Long id) {
+        appointmentValidation.deleteById(id);
     }
 }

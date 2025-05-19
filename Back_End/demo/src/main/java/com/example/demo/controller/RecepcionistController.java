@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Recepcionist;
-import com.example.demo.service.PersonService;
 import com.example.demo.service.RecepcionistService;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -28,10 +27,8 @@ public class RecepcionistController {
         try {
             recepcionistService.crateRecepcionist(recepcionist);
             return ResponseEntity.ok("created successfully");
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    
 }

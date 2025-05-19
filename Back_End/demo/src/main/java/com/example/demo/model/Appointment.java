@@ -36,4 +36,7 @@ public class Appointment {
 
     @Column(name = "appointment_date")
     private LocalDateTime appointmentDate = LocalDateTime.now();
+
+    @Column(nullable = true)
+    private String note; // Observações da consulta @louiemoreira76
 }
