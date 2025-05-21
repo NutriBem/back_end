@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.dto.PersonCreateResponseDto;
 import com.example.demo.model.Patient;
@@ -18,6 +19,8 @@ public class PatientService {
     private PatientValidation patientValidation;
     private PersonValidation personValidation;
 
+     private PasswordEncoder passwordEncoder;
+
     public PatientService(PatientRepository patientRepository, PatientValidation patientValidation,
             PersonValidation personValidation) {
         this.patientRepository = patientRepository;
@@ -28,6 +31,11 @@ public class PatientService {
     public PersonCreateResponseDto create(Patient patient) {
         personValidation.create(patient); /* <- validações genéricas */
         patientValidation.create(patient); /* <- validações específicas do paciente */
+
+        personValidation.validatePasswordStrength(patient.getPassword());
+        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+    
+
         return PersonCreateResponseDto.fromtEntity(patientRepository.save(patient));
     }
 

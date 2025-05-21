@@ -17,10 +17,8 @@ public class RecepcionistService {
 
 
     private PersonService personService;
-    private RecepcionistValidation recepcionistValidation;
     private RecepcionistRepository recepcionistRepository;
-    private PersonValidation personValidation;
-
+   
     public RecepcionistService(
         PersonService personService,
         RecepcionistValidation recepcionistValidation,
@@ -28,13 +26,11 @@ public class RecepcionistService {
         PersonValidation personValidation
     ) {
         this.personService = personService;
-        this.recepcionistValidation = recepcionistValidation;
         this.recepcionistRepository = recepcionistRepository;
-        this.personValidation = personValidation;
+       
     }
 
     public Recepcionist crateRecepcionist(Recepcionist recepcionist) {
-       personValidation.validatePasswordStrength(recepcionist.getPassword());//Validações específicas de recepcionista  
         
         return personService.createPerson(recepcionist);
     }

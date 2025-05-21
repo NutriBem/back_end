@@ -65,6 +65,7 @@ public class PersonController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
         try {
+            //validar se patient tem consulta 
             if (personService.deleteById(id))
                 return ResponseEntity.ok("Sucess!");
 
@@ -80,8 +81,13 @@ public class PersonController {
         try {
             Person updated = personService.updatePerson(id, updatPerson);
             return ResponseEntity.ok(updated);
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch(IllegalStateException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar: " + e.getMessage());
         }

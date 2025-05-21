@@ -2,6 +2,7 @@ package com.example.demo.validations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -32,9 +33,9 @@ public class Validation {
             invalidFiels = new ArrayList<>();
     }
 
-    public void validatePersonUpdate(String email) {
-         if (PersonRepository.existsByEmail(email)) {
-        throw new IllegalStateException("Email já está em uso por outro usuário");
+    public void validatePersonUpdate(UUID id, String newEmail) {
+        if (newEmail == null || newEmail.isBlank()) {
+        throw new IllegalArgumentException("Email não pode ser vazio");
         }
     }
 

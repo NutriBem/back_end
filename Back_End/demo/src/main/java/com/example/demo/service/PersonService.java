@@ -68,8 +68,14 @@ public class PersonService {
 
         System.out.println(existingPerson.getName()); // Correto!
 
-        if (existingPerson.getClass().getName().equals(Recepcionist.class.getName())) {
-            throw new IllegalArgumentException("Tipo de pessoa incompatível para atualização");
+        // if (existingPerson.getClass().getName().equals(Recepcionist.class.getName())) {
+        //     throw new IllegalArgumentException("Tipo de pessoa incompatível para atualização");
+        // }
+
+        if (!existingPerson.getEmail().equals(updatePerson.getEmail())) {
+        if (personRepository.existsByEmail(updatePerson.getEmail())) {
+            throw new IllegalStateException("Este email já está em uso por outro usuário");
+        }
         }
 
         // {
@@ -78,9 +84,9 @@ public class PersonService {
         // "telephone": "123457894"
         // }
 
-        Person newPerson = updateFields(existingPerson, updatePerson);
+       personValidation.validatePersonUpdate(id, updatePerson.getEmail()); 
 
-       // personValidation.validatePersonUpdate(updatePerson); CORRIGIr
+       Person newPerson = updateFields(existingPerson, updatePerson);
         // if (!existingPerson.getEmail().equals(updatedPerson.getEmail())) {
         // validateEmail(updatedPerson.getEmail());
         // }

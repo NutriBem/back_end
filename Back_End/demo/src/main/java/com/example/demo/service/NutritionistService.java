@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.PersonCreateResponseDto;
@@ -20,6 +21,8 @@ public class NutritionistService {
     private NutritionistValidation nutritionistValidation;
     private PersonValidation personValidation;
 
+    private PasswordEncoder passwordEncoder;
+
     public NutritionistService(NutritionistRepository nutritionistRepository,
             NutritionistValidation nutritionistValidation, PersonValidation personValidation) {
         this.nutritionistRepository = nutritionistRepository;
@@ -30,6 +33,10 @@ public class NutritionistService {
     public PersonCreateResponseDto create(Nutritionist nutritionist) {
         personValidation.create(nutritionist);
         nutritionistValidation.create(nutritionist);
+
+        personValidation.validatePasswordStrength(nutritionist.getPassword());
+        nutritionist.setPassword(passwordEncoder.encode(nutritionist.getPassword()));
+    
 
         return PersonCreateResponseDto.fromtEntity(nutritionistRepository.save(nutritionist));
     }
