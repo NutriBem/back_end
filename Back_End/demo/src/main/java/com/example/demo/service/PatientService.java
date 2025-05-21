@@ -23,11 +23,12 @@ public class PatientService {
      private PasswordEncoder passwordEncoder;
 
     public PatientService(PatientRepository patientRepository, PatientValidation patientValidation,
-            PersonValidation personValidation, PersonService personService) {
+            PersonValidation personValidation, PersonService personService, PasswordEncoder passwordEncoder) {
         this.patientRepository = patientRepository;
         this.patientValidation = patientValidation;
         this.personValidation = personValidation;
         this.personService = personService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public PersonCreateResponseDto create(Patient patient) {
@@ -35,7 +36,9 @@ public class PatientService {
         patientValidation.create(patient); /* <- validações específicas do paciente */
 
         personValidation.validatePasswordStrength(patient.getPassword()); /* <- validações de senha*/
+        System.out.println("Senha patiente: " + patient.getPassword());
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
+        System.out.println("PAtient id" + patient.getPassword());
         // PersonCreateResponseDto.fromtEntity(patientRepository.save(patient));
         return PersonCreateResponseDto.fromtEntity(personService.createPerson(patient));
     }
