@@ -9,4 +9,5 @@ import com.example.demo.model.Nutritionist;
 
 public interface AgendaRepository extends JpaRepository<Agenda, Long> {
     List<Agenda> findByNutritionist(Nutritionist nutritionist);
+    boolean existsById(Long id);
 }

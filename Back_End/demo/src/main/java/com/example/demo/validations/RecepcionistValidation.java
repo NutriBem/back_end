@@ -1,11 +1,7 @@
 package com.example.demo.validations;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Component;
 
-import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.RecepcionistRepository;
 
 
@@ -13,6 +9,4 @@ import com.example.demo.repository.RecepcionistRepository;
 public class RecepcionistValidation {
     
      private RecepcionistRepository recepcionistRepository;
-
-
 }

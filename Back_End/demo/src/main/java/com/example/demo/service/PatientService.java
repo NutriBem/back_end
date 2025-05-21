@@ -18,25 +18,26 @@ public class PatientService {
     private PatientRepository patientRepository;
     private PatientValidation patientValidation;
     private PersonValidation personValidation;
+    private PersonService personService;
 
      private PasswordEncoder passwordEncoder;
 
     public PatientService(PatientRepository patientRepository, PatientValidation patientValidation,
-            PersonValidation personValidation) {
+            PersonValidation personValidation, PersonService personService) {
         this.patientRepository = patientRepository;
         this.patientValidation = patientValidation;
         this.personValidation = personValidation;
+        this.personService = personService;
     }
 
     public PersonCreateResponseDto create(Patient patient) {
         personValidation.create(patient); /* <- validações genéricas */
         patientValidation.create(patient); /* <- validações específicas do paciente */
 
-        personValidation.validatePasswordStrength(patient.getPassword());
+        personValidation.validatePasswordStrength(patient.getPassword()); /* <- validações de senha*/
         patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-    
-
-        return PersonCreateResponseDto.fromtEntity(patientRepository.save(patient));
+        // PersonCreateResponseDto.fromtEntity(patientRepository.save(patient));
+        return PersonCreateResponseDto.fromtEntity(personService.createPerson(patient));
     }
 
     public Optional<Patient> getByCpf(String cpf) {

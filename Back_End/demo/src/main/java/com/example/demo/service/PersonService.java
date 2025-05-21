@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
-import com.example.demo.model.Patient;
 import com.example.demo.model.Person;
 import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.PersonRepository;

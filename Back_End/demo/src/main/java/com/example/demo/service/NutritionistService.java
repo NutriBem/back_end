@@ -20,14 +20,16 @@ public class NutritionistService {
     private NutritionistRepository nutritionistRepository;
     private NutritionistValidation nutritionistValidation;
     private PersonValidation personValidation;
+    private PersonService personService;
 
     private PasswordEncoder passwordEncoder;
 
     public NutritionistService(NutritionistRepository nutritionistRepository,
-            NutritionistValidation nutritionistValidation, PersonValidation personValidation) {
+            NutritionistValidation nutritionistValidation, PersonValidation personValidation, PersonService personService) {
         this.nutritionistRepository = nutritionistRepository;
         this.nutritionistValidation = nutritionistValidation;
         this.personValidation = personValidation;
+        this.personService = personService;
     }
 
     public PersonCreateResponseDto create(Nutritionist nutritionist) {
@@ -36,9 +38,8 @@ public class NutritionistService {
 
         personValidation.validatePasswordStrength(nutritionist.getPassword());
         nutritionist.setPassword(passwordEncoder.encode(nutritionist.getPassword()));
-    
-
-        return PersonCreateResponseDto.fromtEntity(nutritionistRepository.save(nutritionist));
+        
+        return PersonCreateResponseDto.fromtEntity(personService.createPerson(nutritionist));
     }
 
     public NutritionistResponseDto getByCrm(String crm) {

@@ -21,8 +21,8 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
+    
+    @ManyToOne()
     @JoinColumn(name = "fk_paciente")
     private Patient fkPatient;
 
@@ -34,7 +34,9 @@ public class Appointment {
     @JoinColumn(name = "fk_receptionist", nullable = true)
     private Recepcionist fkReceptionist;
 
-    @Column(name = "appointment_date", insertable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime appointmentDate;
+    @Column(name = "appointment_date")
+    private LocalDateTime appointmentDate = LocalDateTime.now();
 
+    @Column(nullable = true)
+    private String note; // Observações da consulta @louiemoreira76
 }

@@ -31,7 +31,7 @@ public class NutritionistController {
         try {
             PersonCreateResponseDto responseDto = nutritionistService.create(nutritionist);
             return ResponseEntity.status(201).body(responseDto);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
         }
     }

@@ -30,7 +30,7 @@ public class PatientController {
         try {
             PersonCreateResponseDto responseDto = patientService.create(patient);
             return ResponseEntity.status(201).body(responseDto);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

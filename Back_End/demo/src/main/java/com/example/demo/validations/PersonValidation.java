@@ -18,6 +18,7 @@ public class PersonValidation extends Validation {
     private PersonRepository personRepository;
 
     public PersonValidation(PersonRepository personRepository) {
+
         this.personRepository = personRepository;
     }
 
@@ -33,8 +34,6 @@ public class PersonValidation extends Validation {
     }
 
     public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
-        clearInvalidFields();
-
         isNullOrEmpty(
                 new TypeError("Informe o E-mail.", loginRequestDto.email()),
                 new TypeError("Informe a senha", loginRequestDto.password()));
