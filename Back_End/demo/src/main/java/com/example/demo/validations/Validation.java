@@ -19,6 +19,7 @@ public class Validation {
     List<TypeError> invalidFiels = new ArrayList<>();
 
     public void isNullOrEmpty(TypeError... typeErrors) {
+        System.out.println("ORA");
         clearInvalidFields(); // Limpa a lista de campos inválidos
 
         // Percorre o array de valor recebidos

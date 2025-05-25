@@ -22,6 +22,10 @@ public class PersonValidation extends Validation {
         this.personRepository = personRepository;
     }
 
+    public void validateId(String id) {
+        isNullOrEmpty(new TypeError("ID inválido", id));
+    }
+
     public void create(Person person) {
         isNullOrEmpty(
                 new TypeError("Informe o e-mail", person.getEmail()),

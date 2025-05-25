@@ -2,6 +2,11 @@ package com.example.demo.dto;
 
 import java.util.List;
 
+import com.example.demo.model.Appointment;
+
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+
 public class PdfRequestDto {
     private String title;
     private List <String> paragraphs;

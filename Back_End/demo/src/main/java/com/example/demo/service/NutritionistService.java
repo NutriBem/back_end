@@ -25,11 +25,13 @@ public class NutritionistService {
     private PasswordEncoder passwordEncoder;
 
     public NutritionistService(NutritionistRepository nutritionistRepository,
-            NutritionistValidation nutritionistValidation, PersonValidation personValidation, PersonService personService) {
+            NutritionistValidation nutritionistValidation, PersonValidation personValidation,
+            PersonService personService, PasswordEncoder passwordEncoder) {
         this.nutritionistRepository = nutritionistRepository;
         this.nutritionistValidation = nutritionistValidation;
         this.personValidation = personValidation;
         this.personService = personService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public PersonCreateResponseDto create(Nutritionist nutritionist) {
@@ -38,7 +40,7 @@ public class NutritionistService {
 
         personValidation.validatePasswordStrength(nutritionist.getPassword());
         nutritionist.setPassword(passwordEncoder.encode(nutritionist.getPassword()));
-        
+
         return PersonCreateResponseDto.fromtEntity(personService.createPerson(nutritionist));
     }
 

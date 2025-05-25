@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
+import com.example.demo.errs.TypeError;
 import com.example.demo.model.Person;
 import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.PersonRepository;
@@ -30,8 +31,12 @@ public class PersonService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<PersonResponseDto> getById(UUID id) {
-        return personRepository.findById(id).map(PersonResponseDto::fromEntity);
+    public Optional<PersonResponseDto> getById(String id) {
+        personValidation.validateId(id);
+
+        UUID idParseString = UUID.fromString(id);
+
+        return personRepository.findById(idParseString).map(PersonResponseDto::fromEntity);
     }
 
     public boolean deleteById(UUID id) {

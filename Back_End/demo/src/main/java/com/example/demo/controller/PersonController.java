@@ -30,9 +30,8 @@ public class PersonController {
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> getById(@PathVariable("id") String id) {
         try {
-
             var patientOptional = personService.getById(id);
 
             if (patientOptional.isPresent())

@@ -1,6 +1,8 @@
 package com.example.demo.validations;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,16 @@ public class AgendaValidation extends Validation {
 
         for (Agenda agenda : agendaByNutritionist) {
 
+            if (data.localDate().isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Data inválida.");
+            }
+
+            if (data.localDate().isEqual(LocalDate.now())) {
+                if (data.localTime().isBefore(LocalTime.now())) {
+                    throw new IllegalArgumentException("Horário inválido.");
+                }
+            }
+
             if (agenda.getLocalDate().equals(data.localDate())) {
                 Duration between = Duration.between(agenda.getLocalTime(), data.localTime());
 
@@ -38,9 +50,9 @@ public class AgendaValidation extends Validation {
     }
 
     public Agenda findById(Long id) {
-       Optional<Agenda> agendaOptional = agendaRepository.findById(id);
+        Optional<Agenda> agendaOptional = agendaRepository.findById(id);
 
-        if(agendaOptional.isEmpty())
+        if (agendaOptional.isEmpty())
             throw new IllegalArgumentException("Agenda não encontrada");
 
         return agendaOptional.get();

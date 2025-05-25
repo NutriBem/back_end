@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import java.util.List;
 
+import org.springframework.data.util.Lazy;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
