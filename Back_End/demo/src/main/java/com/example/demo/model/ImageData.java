@@ -3,21 +3,29 @@ package com.example.demo.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "IMAGE_DATA") //da porra da tabela
 public class ImageData {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String fileName;
+    
+    @Column(nullable = false)
+    private String contentType;
+
     @Lob
-    @Column(columnDefinition = "LONGBLOG") //mudar quando migrar para postgress
+    @Column(columnDefinition = "BLOB", nullable = false) //mudar quando migrar para postgress, H2 = BLOB
     private byte[] data;
 
-    private String fileName;
-    private String contentType;
     public Long getId() {
         return id;
     }

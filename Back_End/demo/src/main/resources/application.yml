@@ -13,6 +13,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
+      globally_quoted_identifiers: true
       ddl-auto: update
+      format_sql: true
+      show-sql: true 
+      lob:
+        non_contextual_creation: true
   cors:
     allowed-origins: http://localhost:5173,http://localhost:3000

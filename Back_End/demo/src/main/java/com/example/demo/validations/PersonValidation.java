@@ -55,6 +55,8 @@ public class PersonValidation extends Validation {
         return personEmail;
     }
 
+
+
     public void validatePasswordStrength(String password) {
         if (password == null || password.isEmpty())
             throw new ValidationException("A senha não pode ser nada");
