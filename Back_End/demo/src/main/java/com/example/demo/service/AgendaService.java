@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dto.agenda.AgendaByDatesRequestDto;
 import com.example.demo.dto.agenda.AgendaResponseDto;
 import com.example.demo.dto.agenda.CreateAgendaRequestDto;
 import com.example.demo.model.Agenda;
@@ -73,5 +76,19 @@ public class AgendaService {
                         a.isDisponibility())).collect(Collectors.toList());
 
         return agendaResponseDtos;
+    }
+
+    public List<Agenda> getBetweenDates(AgendaByDatesRequestDto dates) {
+        agendaValidation.getBetweenDates(dates);
+
+        LocalDate starDate = dates.startDate();
+        LocalDate endDate = dates.endDate();
+
+        var agendasOptional = agendaRepository.findByLocalDateBetween(starDate, endDate);
+
+        if(agendasOptional.isEmpty())
+            throw new IllegalArgumentException("Não há resultados");
+
+        return agendasOptional.get();
     }
 }

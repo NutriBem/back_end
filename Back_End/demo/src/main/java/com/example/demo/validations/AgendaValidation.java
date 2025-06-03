@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import com.example.demo.dto.agenda.AgendaByDatesRequestDto;
 import com.example.demo.dto.agenda.CreateAgendaRequestDto;
 import com.example.demo.model.Agenda;
 import com.example.demo.model.Nutritionist;
@@ -56,5 +57,11 @@ public class AgendaValidation extends Validation {
             throw new IllegalArgumentException("Agenda não encontrada");
 
         return agendaOptional.get();
+    }
+
+    public void getBetweenDates(AgendaByDatesRequestDto dates) {
+        if(dates.startDate().isAfter(dates.endDate()))
+            throw new IllegalArgumentException("Data inválida");
+
     }
 }

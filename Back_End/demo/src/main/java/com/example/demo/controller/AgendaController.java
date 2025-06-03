@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.agenda.AgendaByDatesRequestDto;
 import com.example.demo.dto.agenda.AgendaResponseDto;
 import com.example.demo.dto.agenda.CreateAgendaRequestDto;
+import com.example.demo.model.Agenda;
 import com.example.demo.service.AgendaService;
 
 @RestController
@@ -40,6 +42,18 @@ public class AgendaController {
         try {
             List<AgendaResponseDto> responseDto = agendaService.getAgendaByCrmNutritionist(crm);
             return ResponseEntity.ok().body(responseDto);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/date")
+    public ResponseEntity<?> getByDates(@RequestBody AgendaByDatesRequestDto dates) {
+        try {
+            List<Agenda> agendas = agendaService.getBetweenDates(dates);
+            return ResponseEntity.ok().body(agendas);
         } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
