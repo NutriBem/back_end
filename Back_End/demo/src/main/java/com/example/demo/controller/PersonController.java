@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Optional;
@@ -14,13 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
-import com.example.demo.errs.GlobalExceptionHandler;
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
+
+import jakarta.websocket.server.PathParam;
 
 @RestController
 public class PersonController {
@@ -39,25 +42,21 @@ public class PersonController {
         try {
             Optional<PersonResponseDto> patientOptional = personService.getById(id);
 
-           return patientOptional
-            .map(ResponseEntity::ok)
-           .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pessoa não encontrada com o ID: " + id));
+            return patientOptional
+                    .map(ResponseEntity::ok)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Pessoa não encontrada com o ID: " + id));
 
-        } catch (IllegalArgumentException e) { //UUID INVALIDO
+        } catch (IllegalArgumentException e) { // UUID INVALIDO
             return ResponseEntity.badRequest().body(
-                Map.of("!error!" , "ID inválido", "*details*", e.getMessage())
-            );
-        }
-        catch (RuntimeException e) {// pega person não encontrado e outros erros simples
+                    Map.of("!error!", "ID inválido", "*details*", e.getMessage()));
+        } catch (RuntimeException e) {// pega person não encontrado e outros erros simples
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                Map.of("!error!", e.getMessage())
-            );
-            }
-        catch (Exception e) { //erros alem disso
+                    Map.of("!error!", e.getMessage()));
+        } catch (Exception e) { // erros alem disso
             return ResponseEntity.internalServerError().body(
-                Map.of("!error!", "Erro interno inesperado", "*details*", e.getMessage())
-            );
-            }
+                    Map.of("!error!", "Erro interno inesperado", "*details*", e.getMessage()));
+        }
     }
 
     @PostMapping("/login")
@@ -75,10 +74,32 @@ public class PersonController {
         }
     }
 
+    // Adiciona a imagem do paciente
+    @PostMapping("/image/{id}")
+    private ResponseEntity<?> addImageFromPerson(@PathParam("file") MultipartFile file,
+            @PathVariable("id") String personId) {
+        try {
+            Long id = personService.saveImage(file, personId);
+            return ResponseEntity.ok().body(id);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/image/search/{id}")
+    private ResponseEntity<?> getImageFromPerson(@PathVariable("id") String id) {
+        try {
+            byte[] image = personService.getImage(id);
+            return ResponseEntity.ok().body(image);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
         try {
-            //validar se patient tem consulta 
+            // validar se patient tem consulta
             if (personService.deleteById(id))
                 return ResponseEntity.ok("Sucess!");
 
@@ -98,9 +119,9 @@ public class PersonController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
-        } catch(IllegalStateException e){
+        } catch (IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-            
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao atualizar: " + e.getMessage());
         }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,13 +8,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
 import com.example.demo.errs.TypeError;
+import com.example.demo.model.ImageData;
 import com.example.demo.model.Person;
 import com.example.demo.model.Recepcionist;
+import com.example.demo.repository.ImageDataRepository;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.validations.PersonValidation;
 
@@ -23,14 +27,17 @@ public class PersonService {
     private PersonRepository personRepository;
     private PersonValidation personValidation;
     private PasswordEncoder passwordEncoder;
+    private ImageDataRepository imageDataRepository;
 
     public PersonService(
             PersonRepository personRepository,
             PersonValidation personValidation,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            ImageDataRepository imageDataRepository) {
         this.personRepository = personRepository;
         this.personValidation = personValidation;
         this.passwordEncoder = passwordEncoder;
+        this.imageDataRepository = imageDataRepository;
     }
 
     public Optional<PersonResponseDto> getById(String id) {
@@ -126,5 +133,35 @@ public class PersonService {
 
         person.setPassword(passwordEncoder.encode(newPassword));
         personRepository.save(person);
+    }
+
+    public Long saveImage(MultipartFile file, String personId) throws IOException{
+        personValidation.isNullOrEmpty(new TypeError("Informe o id do usuário", personId));
+
+        Optional<Person> person = personRepository.findById(UUID.fromString(personId));
+
+        if(person.isEmpty())
+            throw new IllegalArgumentException("Usuário não encontrado.");
+
+        ImageData imageData = new ImageData();
+        imageData.setFileName(file.getOriginalFilename());
+        imageData.setContentType(file.getContentType());
+        imageData.setData(file.getBytes());
+
+        ImageData newImageData = imageDataRepository.save(imageData);
+        
+        person.get().setImageData(newImageData); // salva a imagem no atributo 'imageData' do Person
+        personRepository.save(person.get()); // altera o usuário
+        return newImageData.getId();
+    }
+
+    public byte[] getImage(String id) {
+        personValidation.isNullOrEmpty(new TypeError("Informe o id do usuário", id));
+        Optional<Person> person = personRepository.findById(UUID.fromString(id));
+
+        if(person.isEmpty())
+            throw new IllegalArgumentException("Usuário não encontrado.");
+
+        return person.get().getImageData().getData();
     }
 }

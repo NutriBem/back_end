@@ -11,6 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import lombok.Data;
 
@@ -34,6 +37,10 @@ public class Person implements Serializable {
 
     @Column(nullable = false, length = 11, unique = true)
     private String telephone;
+
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private ImageData imageData;
 
     @Transient
     List<Appointment> appointmentList;
