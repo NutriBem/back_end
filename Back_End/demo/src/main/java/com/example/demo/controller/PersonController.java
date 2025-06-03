@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,8 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.dto.PersonResponseDto;
+import com.example.demo.errs.GlobalExceptionHandler;
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
 
@@ -32,16 +37,27 @@ public class PersonController {
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") String id) {
         try {
-            var patientOptional = personService.getById(id);
+            Optional<PersonResponseDto> patientOptional = personService.getById(id);
 
-            if (patientOptional.isPresent())
-                return ResponseEntity.ok(patientOptional.get());
+           return patientOptional
+            .map(ResponseEntity::ok)
+           .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pessoa não encontrada com o ID: " + id));
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Paciente não encontrado");
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("ERROR:" + e.getMessage());
+        } catch (IllegalArgumentException e) { //UUID INVALIDO
+            return ResponseEntity.badRequest().body(
+                Map.of("!error!" , "ID inválido", "*details*", e.getMessage())
+            );
         }
+        catch (RuntimeException e) {// pega person não encontrado e outros erros simples
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                Map.of("!error!", e.getMessage())
+            );
+            }
+        catch (Exception e) { //erros alem disso
+            return ResponseEntity.internalServerError().body(
+                Map.of("!error!", "Erro interno inesperado", "*details*", e.getMessage())
+            );
+            }
     }
 
     @PostMapping("/login")

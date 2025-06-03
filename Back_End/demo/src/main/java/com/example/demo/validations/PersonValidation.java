@@ -1,6 +1,9 @@
 package com.example.demo.validations;
 
 import java.util.Optional;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -23,8 +26,17 @@ public class PersonValidation extends Validation {
     }
 
     public void validateId(String id) {
-        isNullOrEmpty(new TypeError("ID inválido", id));
+    if (id == null || id.trim().isEmpty()) {
+        throw new IllegalArgumentException("ID não pode ser nulo ou vazio");
     }
+
+    try {
+        UUID.fromString(id); // sera que id foi
+    } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException("ID deve ser no formato UUID requerido pelo sistema", e);
+    }
+}
+
 
     public void create(Person person) {
         isNullOrEmpty(
@@ -34,7 +46,7 @@ public class PersonValidation extends Validation {
                 new TypeError("Informe o telefone", person.getTelephone()));
 
         if (personRepository.existsByEmail(person.getEmail()))
-            throw new IllegalArgumentException("E-mail já dastrado.");
+            throw new IllegalArgumentException("E-mail já dastrado.");        
     }
 
     public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
@@ -54,8 +66,6 @@ public class PersonValidation extends Validation {
 
         return personEmail;
     }
-
-
 
     public void validatePasswordStrength(String password) {
         if (password == null || password.isEmpty())
@@ -82,4 +92,54 @@ public class PersonValidation extends Validation {
         }
     }
 
+ public void validateEmailFormat(String email) {
+    if (email == null || email.trim().isEmpty()) {
+        throw new ValidationException("Email não pode ser vazio");
+    }
+
+    boolean hasSpecialChars = email.split("@")[0].matches(".*[@#$%^&+=!].*");
+    boolean startsOrEndsWithDot = email.startsWith(".") || email.startsWith("-") || 
+                                 email.endsWith(".") || email.endsWith("-");
+    boolean hasSpaces = email.contains(" ");
+    boolean hasAt = email.contains("@");
+    boolean hasValidDomain = email.matches(".*@.+\\..+");
+
+    StringBuilder errorMessage = new StringBuilder();
+    
+    if (hasSpecialChars) {
+        errorMessage.append("Email não deve conter caracteres especiais na parte local\n");
+    }
+    if (startsOrEndsWithDot) {
+        errorMessage.append("Email não pode começar ou terminar com . ou -\n");
+    }
+    if (hasSpaces) {
+        errorMessage.append("Email não pode conter espaços\n");
+    }
+    if (!hasAt) {
+        errorMessage.append("Email deve conter @\n");
+    }
+    if (!hasValidDomain) {
+        errorMessage.append("Domínio do email inválido\n");
+    }
+
+    if (errorMessage.length() > 0) {
+        throw new ValidationException(errorMessage.toString() + 
+            "Exemplo válido: usuario@dominio.com");
+    }
+}
+
+    public void validateTelephone(String telephone){
+         String regex = "^\\+?[1-9]\\d{1,14}$";
+         Pattern pattern = Pattern.compile(regex);
+
+         Matcher matcher = pattern.matcher(telephone.replaceAll("\\D", ""));
+
+         if (matcher.matches()) {
+             System.err.println("ok telefone ^^");
+         } else {
+            throw new ValidationException("Telefone não valido");
+         }
+    }
+
+    
 }
