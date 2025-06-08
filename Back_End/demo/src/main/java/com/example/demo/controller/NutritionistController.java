@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.PersonCreateResponseDto;
 import com.example.demo.dto.nutritionist.NutritionistResponseDto;
 import com.example.demo.model.Nutritionist;
+import com.example.demo.service.AgendaService;
 import com.example.demo.service.NutritionistService;
 
 @RestController
@@ -21,15 +22,18 @@ import com.example.demo.service.NutritionistService;
 public class NutritionistController {
 
     public NutritionistService nutritionistService;
+    public AgendaService agendaService;
 
-    public NutritionistController(NutritionistService nutritionistService) {
+    public NutritionistController(NutritionistService nutritionistService, AgendaService agendaService) {
         this.nutritionistService = nutritionistService;
+        this.agendaService = agendaService;
     }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Nutritionist nutritionist) {
         try {
-            PersonCreateResponseDto responseDto = nutritionistService.create(nutritionist);
+            PersonCreateResponseDto responseDto = nutritionistService.create(nutritionist); // cria o nutricionista
+            agendaService.create(responseDto.id()); // cria a agenda do nutricionista;
             return ResponseEntity.status(201).body(responseDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());

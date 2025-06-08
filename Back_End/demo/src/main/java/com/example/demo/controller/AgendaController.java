@@ -24,15 +24,15 @@ public class AgendaController {
         this.agendaService = agendaService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateAgendaRequestDto data) {
-        try {
-            CreateAgendaRequestDto response = agendaService.create(data);
-            return ResponseEntity.status(201).body(response);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
-        }
-    }
+    // @PostMapping
+    // public ResponseEntity<?> create(@RequestBody CreateAgendaRequestDto data) {
+    //     try {
+    //         CreateAgendaRequestDto response = agendaService.create(data);
+    //         return ResponseEntity.status(201).body(response);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
+    //     }
+    // }
 
     // Pesquisar a agenda do nutrólogo
     @GetMapping("{crm}")

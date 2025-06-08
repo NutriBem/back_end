@@ -55,18 +55,28 @@ public class PersonValidation extends Validation {
     }
 
     public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
+
         isNullOrEmpty(
                 new TypeError("Informe o E-mail.", loginRequestDto.email()),
                 new TypeError("Informe a senha", loginRequestDto.password()));
 
         // busca email
         Optional<Person> personEmail = personRepository.findByEmail(loginRequestDto.email());
+
         if (personEmail.isEmpty())
             return Optional.empty();
 
         // senha digitada = hash armazenado
         Person person = personEmail.get();
-        if (!passwordEncoder.matches(loginRequestDto.password(), person.getPassword()))
+
+        System.out.println("E-mail > " + personEmail.get().getEmail()); // ok
+        System.out.println("Senha > " + personEmail.get().getPassword()); // ok
+
+        System.out.println("LOGIN PASSWORD: " + loginRequestDto.password());
+        System.out.println("LOGIN E-MAIL: " + loginRequestDto.email());
+
+        if (!passwordEncoder.matches(loginRequestDto.password(),
+                person.getPassword()))
             return Optional.empty(); // senha errada
 
         return personEmail;

@@ -13,7 +13,6 @@ import com.example.demo.dto.PersonCreateResponseDto;
 import com.example.demo.model.Patient;
 import com.example.demo.service.PatientService;
 
-// @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
@@ -22,7 +21,6 @@ public class PatientController {
 
     public PatientController(PatientService patientService) {
         this.patientService = patientService;
-
     }
 
     @PostMapping

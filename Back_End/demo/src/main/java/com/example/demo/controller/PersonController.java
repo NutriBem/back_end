@@ -64,9 +64,9 @@ public class PersonController {
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
         try {
             Optional<Person> loginResp = personService.login(loginRequestDto);
-
+            
             return loginResp
-                    .map(person -> ResponseEntity.ok(new LoginResponse(person.getId(), null)))
+                    .map(person -> ResponseEntity.ok(new LoginResponse(person.getId(), "")))
                     .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                             .body(new LoginResponse(null, "E-mail e/ou senha inválidos.")));
 

@@ -1,6 +1,11 @@
 package com.example.demo.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -9,39 +14,59 @@ import com.example.demo.dto.agenda.AgendaResponseDto;
 import com.example.demo.dto.agenda.CreateAgendaRequestDto;
 import com.example.demo.model.Agenda;
 import com.example.demo.repository.AgendaRepository;
-import com.example.demo.validations.AgendaValidation;
+import com.example.demo.repository.NutritionistRepository;
+import com.example.demo.singleton.BussinesHours;
 import com.example.demo.validations.NutritionistValidation;
 
 @Service
 public class AgendaService {
     private AgendaRepository agendaRepository;
     private NutritionistValidation nutritionistValidation;
-    private AgendaValidation agendaValidation;
+    private NutritionistRepository nutritionistRepository;
 
-    public AgendaService(AgendaRepository agendaRepository, NutritionistValidation nutritionistValidation,
-            AgendaValidation agendaValidation) {
+    public AgendaService(AgendaRepository agendaRepository, NutritionistValidation nutritionistValidation, NutritionistRepository nutritionistRepository) {
         this.agendaRepository = agendaRepository;
         this.nutritionistValidation = nutritionistValidation;
-        this.agendaValidation = agendaValidation;
+        this.nutritionistRepository = nutritionistRepository;
     }
 
-    public CreateAgendaRequestDto create(CreateAgendaRequestDto data) {
-        var nutriotionistOpt = nutritionistValidation.findByCrm(data.crm());
+    // cria a agenda para as próximas duas semanas
+    public void create(UUID id) {
+        var nutriotionistOpt = nutritionistRepository.findById(id);
 
         if (nutriotionistOpt.isEmpty())
-            throw new IllegalArgumentException("Médico não encontrado.");
+            throw new IllegalArgumentException("Nutricionista não encontrado.");
 
-        agendaValidation.create(data, nutriotionistOpt.get());
+        List<Agenda> agendaNutritionist = agendaRepository.findByNutritionist(nutriotionistOpt.get());
 
-        Agenda agenda = new Agenda();
-        agenda.setLocalDate(data.localDate());
-        agenda.setLocalTime(data.localTime());
-        agenda.setNutritionist(nutriotionistOpt.get());
+        // criar as agendas na primeira seção do nutritionista
+        if (agendaNutritionist.isEmpty()) {
+            byte countDays = 0;
+            LocalDate date;
 
-        agendaRepository.save(agenda);
+            // horário de funcionamento da clínica
+            List<LocalTime> openingHours = BussinesHours.hours();
 
-        return CreateAgendaRequestDto.fromtEntity(agenda.getNutritionist().getCrm(), agenda.getLocalDate(),
-                agenda.getLocalTime());
+            while (countDays <= 14) {
+                countDays++;
+                date = LocalDate.now().plusDays(countDays);
+
+                // Pula sábados e domingos
+                DayOfWeek dayOfWeek = date.getDayOfWeek();
+                if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY)
+                    continue;
+
+                for (LocalTime time : openingHours) {
+                    Agenda agenda = new Agenda();
+                    agenda.setNutritionist(nutriotionistOpt.get());
+                    agenda.setLocalDate(date);
+                    agenda.setLocalTime(time);
+                    agendaRepository.save(agenda);
+                }
+            }
+            return;
+        }
+        
     }
 
     public List<AgendaResponseDto> getAgendaByCrmNutritionist(String id) {
@@ -70,7 +95,8 @@ public class AgendaService {
                         a.getNutritionist().getName(),
                         a.getLocalDate(),
                         a.getLocalTime(),
-                        a.isDisponibility())).collect(Collectors.toList());
+                        a.isDisponibility()))
+                .collect(Collectors.toList());
 
         return agendaResponseDtos;
     }

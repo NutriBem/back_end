@@ -34,12 +34,7 @@ public class PatientService {
     public PersonCreateResponseDto create(Patient patient) {
         personValidation.create(patient); /* <- validações genéricas */
         patientValidation.create(patient); /* <- validações específicas do paciente */
-
-        personValidation.validatePasswordStrength(patient.getPassword()); /* <- validações de senha*/
-        System.out.println("Senha patiente: " + patient.getPassword());
-        patient.setPassword(passwordEncoder.encode(patient.getPassword()));
-        System.out.println("PAtient id" + patient.getPassword());
-        // PersonCreateResponseDto.fromtEntity(patientRepository.save(patient));
+        
         return PersonCreateResponseDto.fromtEntity(personService.createPerson(patient));
     }
 
