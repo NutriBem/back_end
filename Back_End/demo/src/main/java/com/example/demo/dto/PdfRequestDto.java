@@ -9,7 +9,7 @@ import jakarta.persistence.OneToOne;
 
 public class PdfRequestDto {
     private String title;
-    private List <String> paragraphs;
+    private String paragraph;
 
       public String getTitle() {
         return title;
@@ -19,11 +19,13 @@ public class PdfRequestDto {
         this.title = t;
     }
 
-    public List<String> getParagraphs() {
-        return paragraphs;
+    public String getParagraph() {
+        return paragraph;
     }
 
-    public void setParagraphs(List<String> paragraphs) {
-        this.paragraphs = paragraphs;
+    public void setParagraph(String paragraph) {
+        this.paragraph = paragraph;
     }
+
+
 }
