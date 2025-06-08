@@ -30,11 +30,9 @@ public class RecepcionistService {
 
     public Recepcionist crateRecepcionist(Recepcionist recepcionist) {
         personValidation.create(recepcionist); /* <- validações genéricas */
-        personValidation.validateEmailFormat(recepcionist.getEmail());
-
         return personService.createPerson(recepcionist);
     }
-
+    
     public Optional<Recepcionist> loginRecepcionist(LoginRequestDto loginRequest) {
         Optional<Person> person = personService.login(loginRequest);
 

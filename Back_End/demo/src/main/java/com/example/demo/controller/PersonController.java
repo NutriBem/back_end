@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.Optional;
 
+import org.aspectj.weaver.ast.Instanceof;
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
+import com.example.demo.dto.PersonResponseIdDto;
+import com.example.demo.model.Nutritionist;
+import com.example.demo.model.Patient;
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
 
@@ -41,16 +46,21 @@ public class PersonController {
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") String id) {
         try {
-            Optional<PersonResponseDto> patientOptional = personService.getById(id);
+            Optional<Person> personOptional = Optional.ofNullable(personService.getById(id));
 
-            return patientOptional
-                    .map(ResponseEntity::ok)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Pessoa não encontrada com o ID: " + id));
+            byte type;
 
+            if(personOptional.get() instanceof Patient) {
+                type = 1;
+            }else if(personOptional.get() instanceof Nutritionist) {
+                type = 2;
+            }else {
+                type = 3;
+            }
+
+            return ResponseEntity.ok().body(PersonResponseIdDto.fromEntity(personOptional.get().getId(), type));
         } catch (IllegalArgumentException e) { // UUID INVALIDO
-            return ResponseEntity.badRequest().body(
-                    Map.of("!error!", "ID inválido", "*details*", e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (RuntimeException e) {// pega person não encontrado e outros erros simples
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     Map.of("!error!", e.getMessage()));

@@ -23,6 +23,7 @@ public class PatientController {
         this.patientService = patientService;
     }
 
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Patient patient) {
         try {

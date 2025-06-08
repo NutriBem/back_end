@@ -39,12 +39,16 @@ public class PersonService {
         this.imageDataRepository = imageDataRepository;
     }
 
-    public Optional<PersonResponseDto> getById(String id) {
+    public Person getById(String id) {
         try {
             personValidation.validateId(id);
             UUID idParseString = UUID.fromString(id);
-            return personRepository.findById(idParseString).map(PersonResponseDto::fromEntity);
+            Optional<Person> response = personRepository.findById(idParseString);
 
+            if (response.isEmpty())
+                throw new IllegalArgumentException("Usuário não encontrado");
+
+            return response.get();
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -71,8 +75,8 @@ public class PersonService {
     }
 
     public Optional<Person> login(LoginRequestDto loginRequest) {
-           System.out.println("\n[Service] Iniciando validação de login...");
-    return personValidation.login(loginRequest, passwordEncoder);
+        System.out.println("\n[Service] Iniciando validação de login...");
+        return personValidation.login(loginRequest, passwordEncoder);
     }
 
     protected <T extends Person> T createPerson(T person) {

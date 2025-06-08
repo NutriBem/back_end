@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import com.example.demo.errs.TypeError;
 import com.example.demo.repository.PersonRepository;
 
-import jakarta.validation.ValidationException;
-
 @Component
 public class Validation {
 
@@ -51,26 +49,5 @@ public class Validation {
             throw new IllegalArgumentException("Campos inválidos: " + invalidFiels);
     }
 
-    public void validatePasswordStrength(String password) {
-        if (password == null || password.isEmpty())
-            throw new ValidationException("A senha não pode ser nada");
-
-        boolean hasUpper = password.matches(".*[A-Z].*");
-        boolean hasDigit = password.matches(".*\\d.*");
-        boolean hasSpecial = password.matches(".*[@#$%^&+=!].*");
-        boolean hasLength = password.length() >= 8;
-
-        System.out.printf("Resultados: Maiúscula=%b, Número=%b, Especial=%b, Tamanho=%b%n",
-                hasUpper, hasDigit, hasSpecial, hasLength); // DEBUG
-
-        if (!(hasUpper && hasDigit && hasSpecial && hasLength)) {
-            throw new ValidationException(
-                    "Senha deve conter:\n" +
-                            (hasUpper ? "" : "- Pelo menos 1 letra maiúscula\n") +
-                            (hasDigit ? "" : "- Pelo menos 1 número\n") +
-                            (hasSpecial ? "" : "- Pelo menos 1 caractere especial (@#$%^&+=!)\n") +
-                            (hasLength ? "" : "- Mínimo de 8 caracteres\n") +
-                            "Exemplo válido: Senha@1234");
-        }
-    }
+    
 }

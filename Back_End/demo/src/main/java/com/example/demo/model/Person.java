@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +21,7 @@ import lombok.Data;
 @Entity
 @Data
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "person_type")
 public class Person implements Serializable {
 
     @Id
