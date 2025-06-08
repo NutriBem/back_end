@@ -16,7 +16,6 @@ import com.example.demo.dto.PersonResponseDto;
 import com.example.demo.errs.TypeError;
 import com.example.demo.model.ImageData;
 import com.example.demo.model.Person;
-import com.example.demo.model.Recepcionist;
 import com.example.demo.repository.ImageDataRepository;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.validations.PersonValidation;

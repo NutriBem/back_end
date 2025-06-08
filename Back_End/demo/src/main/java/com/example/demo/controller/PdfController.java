@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
-import java.io.ByteArrayInputStream;
-
 import com.example.demo.dto.PdfRequestDto;
 
 @RestController
