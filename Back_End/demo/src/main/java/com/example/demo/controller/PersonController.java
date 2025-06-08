@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -100,13 +101,14 @@ public class PersonController {
     public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
         try {
             // validar se patient tem consulta
-            if (personService.deleteById(id))
-                return ResponseEntity.ok("Sucess!");
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            personService.deleteById(id);
+            return ResponseEntity.ok("Usuário excluído com sucesso.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("ERROR: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
+
     }
 
     // editar

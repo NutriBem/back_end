@@ -41,28 +41,34 @@ public class PersonService {
     }
 
     public Optional<PersonResponseDto> getById(String id) {
-      try {
-        personValidation.validateId(id);
-        UUID idParseString = UUID.fromString(id);
-        return personRepository.findById(idParseString).map(PersonResponseDto::fromEntity);
-        
-      } catch (IllegalArgumentException e) {
-        throw new ResponseStatusException(
-          HttpStatus.BAD_REQUEST,
-          e.getMessage(),
-          e
-        );
-      }
+        try {
+            personValidation.validateId(id);
+            UUID idParseString = UUID.fromString(id);
+            return personRepository.findById(idParseString).map(PersonResponseDto::fromEntity);
+
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage(),
+                    e);
+        }
     }
 
-    public boolean deleteById(UUID id) {
+    public void deleteById(UUID id) {
+        Optional<Person> personOptional = personRepository.findById(id);
 
-        boolean existsById = personRepository.existsById(id);
+        if (personOptional.isEmpty())
+            throw new IllegalArgumentException("Usuário não encontrado");
 
-        if (existsById)
-            personRepository.deleteById(id);
+        Person person = personOptional.get();
 
-        return existsById;
+        // verificar se o usuário possui consultas não finalizadas;
+        boolean result = personValidation.appointmentNotFinished(person);
+
+        if (result)
+            throw new IllegalArgumentException("Não é possível excluir a sua conta, pois há consultas não concluídas.");
+
+        personRepository.delete(personOptional.get());
     }
 
     public Optional<Person> login(LoginRequestDto loginRequest) {
@@ -88,14 +94,16 @@ public class PersonService {
 
         System.out.println(existingPerson.getName()); // Correto!
 
-        // if (existingPerson.getClass().getName().equals(Recepcionist.class.getName())) {
-        //     throw new IllegalArgumentException("Tipo de pessoa incompatível para atualização");
+        // if (existingPerson.getClass().getName().equals(Recepcionist.class.getName()))
+        // {
+        // throw new IllegalArgumentException("Tipo de pessoa incompatível para
+        // atualização");
         // }
 
         if (!existingPerson.getEmail().equals(updatePerson.getEmail())) {
-        if (personRepository.existsByEmail(updatePerson.getEmail())) {
-            throw new IllegalStateException("Este email já está em uso por outro usuário");
-        }
+            if (personRepository.existsByEmail(updatePerson.getEmail())) {
+                throw new IllegalStateException("Este email já está em uso por outro usuário");
+            }
         }
 
         // {
@@ -104,9 +112,9 @@ public class PersonService {
         // "telephone": "123457894"
         // }
 
-       personValidation.validatePersonUpdate(id, updatePerson.getEmail()); 
+        personValidation.validatePersonUpdate(id, updatePerson.getEmail());
 
-       Person newPerson = updateFields(existingPerson, updatePerson);
+        Person newPerson = updateFields(existingPerson, updatePerson);
         // if (!existingPerson.getEmail().equals(updatedPerson.getEmail())) {
         // validateEmail(updatedPerson.getEmail());
         // }
@@ -135,12 +143,12 @@ public class PersonService {
         personRepository.save(person);
     }
 
-    public Long saveImage(MultipartFile file, String personId) throws IOException{
+    public Long saveImage(MultipartFile file, String personId) throws IOException {
         personValidation.isNullOrEmpty(new TypeError("Informe o id do usuário", personId));
 
         Optional<Person> person = personRepository.findById(UUID.fromString(personId));
 
-        if(person.isEmpty())
+        if (person.isEmpty())
             throw new IllegalArgumentException("Usuário não encontrado.");
 
         ImageData imageData = new ImageData();
@@ -149,7 +157,7 @@ public class PersonService {
         imageData.setData(file.getBytes());
 
         ImageData newImageData = imageDataRepository.save(imageData);
-        
+
         person.get().setImageData(newImageData); // salva a imagem no atributo 'imageData' do Person
         personRepository.save(person.get()); // altera o usuário
         return newImageData.getId();
@@ -159,7 +167,7 @@ public class PersonService {
         personValidation.isNullOrEmpty(new TypeError("Informe o id do usuário", id));
         Optional<Person> person = personRepository.findById(UUID.fromString(id));
 
-        if(person.isEmpty())
+        if (person.isEmpty())
             throw new IllegalArgumentException("Usuário não encontrado.");
 
         return person.get().getImageData().getData();

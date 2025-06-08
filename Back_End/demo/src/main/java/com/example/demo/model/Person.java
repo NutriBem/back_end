@@ -6,13 +6,14 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
-
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 import lombok.Data;
@@ -42,6 +43,6 @@ public class Person implements Serializable {
     @JoinColumn(name = "image_id")
     private ImageData imageData;
 
-    @Transient
+    @OneToMany(fetch = FetchType.LAZY)
     List<Appointment> appointmentList;
 }

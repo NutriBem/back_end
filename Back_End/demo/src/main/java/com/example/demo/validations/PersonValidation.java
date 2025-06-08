@@ -1,5 +1,8 @@
 package com.example.demo.validations;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -10,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.errs.TypeError;
+import com.example.demo.model.Appointment;
 import com.example.demo.model.Person;
+import com.example.demo.repository.AppointmentRepository;
 import com.example.demo.repository.PersonRepository;
 
 import jakarta.validation.ValidationException;
@@ -19,24 +24,24 @@ import jakarta.validation.ValidationException;
 public class PersonValidation extends Validation {
 
     private PersonRepository personRepository;
+    private AppointmentRepository appointmentRepository;
 
-    public PersonValidation(PersonRepository personRepository) {
-
+    public PersonValidation(PersonRepository personRepository, AppointmentRepository appointmentRepository) {
         this.personRepository = personRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public void validateId(String id) {
-    if (id == null || id.trim().isEmpty()) {
-        throw new IllegalArgumentException("ID não pode ser nulo ou vazio");
-    }
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID não pode ser nulo ou vazio");
+        }
 
-    try {
-        UUID.fromString(id); // sera que id foi
-    } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException("ID deve ser no formato UUID requerido pelo sistema", e);
+        try {
+            UUID.fromString(id); // sera que id foi
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("ID deve ser no formato UUID requerido pelo sistema", e);
+        }
     }
-}
-
 
     public void create(Person person) {
         isNullOrEmpty(
@@ -46,7 +51,7 @@ public class PersonValidation extends Validation {
                 new TypeError("Informe o telefone", person.getTelephone()));
 
         if (personRepository.existsByEmail(person.getEmail()))
-            throw new IllegalArgumentException("E-mail já dastrado.");        
+            throw new IllegalArgumentException("E-mail já dastrado.");
     }
 
     public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
@@ -92,54 +97,74 @@ public class PersonValidation extends Validation {
         }
     }
 
- public void validateEmailFormat(String email) {
-    if (email == null || email.trim().isEmpty()) {
-        throw new ValidationException("Email não pode ser vazio");
+    public void validateEmailFormat(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new ValidationException("Email não pode ser vazio");
+        }
+
+        boolean hasSpecialChars = email.split("@")[0].matches(".*[@#$%^&+=!].*");
+        boolean startsOrEndsWithDot = email.startsWith(".") || email.startsWith("-") ||
+                email.endsWith(".") || email.endsWith("-");
+        boolean hasSpaces = email.contains(" ");
+        boolean hasAt = email.contains("@");
+        boolean hasValidDomain = email.matches(".*@.+\\..+");
+
+        StringBuilder errorMessage = new StringBuilder();
+
+        if (hasSpecialChars) {
+            errorMessage.append("Email não deve conter caracteres especiais na parte local\n");
+        }
+        if (startsOrEndsWithDot) {
+            errorMessage.append("Email não pode começar ou terminar com . ou -\n");
+        }
+        if (hasSpaces) {
+            errorMessage.append("Email não pode conter espaços\n");
+        }
+        if (!hasAt) {
+            errorMessage.append("Email deve conter @\n");
+        }
+        if (!hasValidDomain) {
+            errorMessage.append("Domínio do email inválido\n");
+        }
+
+        if (errorMessage.length() > 0) {
+            throw new ValidationException(errorMessage.toString() +
+                    "Exemplo válido: usuario@dominio.com");
+        }
     }
 
-    boolean hasSpecialChars = email.split("@")[0].matches(".*[@#$%^&+=!].*");
-    boolean startsOrEndsWithDot = email.startsWith(".") || email.startsWith("-") || 
-                                 email.endsWith(".") || email.endsWith("-");
-    boolean hasSpaces = email.contains(" ");
-    boolean hasAt = email.contains("@");
-    boolean hasValidDomain = email.matches(".*@.+\\..+");
+    public void validateTelephone(String telephone) {
+        String regex = "^\\+?[1-9]\\d{1,14}$";
+        Pattern pattern = Pattern.compile(regex);
 
-    StringBuilder errorMessage = new StringBuilder();
-    
-    if (hasSpecialChars) {
-        errorMessage.append("Email não deve conter caracteres especiais na parte local\n");
-    }
-    if (startsOrEndsWithDot) {
-        errorMessage.append("Email não pode começar ou terminar com . ou -\n");
-    }
-    if (hasSpaces) {
-        errorMessage.append("Email não pode conter espaços\n");
-    }
-    if (!hasAt) {
-        errorMessage.append("Email deve conter @\n");
-    }
-    if (!hasValidDomain) {
-        errorMessage.append("Domínio do email inválido\n");
-    }
+        Matcher matcher = pattern.matcher(telephone.replaceAll("\\D", ""));
 
-    if (errorMessage.length() > 0) {
-        throw new ValidationException(errorMessage.toString() + 
-            "Exemplo válido: usuario@dominio.com");
-    }
-}
-
-    public void validateTelephone(String telephone){
-         String regex = "^\\+?[1-9]\\d{1,14}$";
-         Pattern pattern = Pattern.compile(regex);
-
-         Matcher matcher = pattern.matcher(telephone.replaceAll("\\D", ""));
-
-         if (matcher.matches()) {
-             System.err.println("ok telefone ^^");
-         } else {
+        if (matcher.matches()) {
+            System.err.println("ok telefone ^^");
+        } else {
             throw new ValidationException("Telefone não valido");
-         }
+        }
     }
 
-    
+    public boolean appointmentNotFinished(Person person) {
+        System.out.println("certo");
+
+        List<Appointment> appointments = appointmentRepository.findByFkPatient(person);
+
+        // retorna false, pois não possui consultas
+        if (appointments.isEmpty())
+            return false;
+
+        // Retorna true caso exista alguma consulta depois da data ou hora atuais
+        for (Appointment appointment : appointments) {
+            if (appointment.getFkAgenda().getLocalDate().isAfter(LocalDate.now())
+                    || (appointment.getFkAgenda().getLocalDate().isEqual(LocalDate.now())
+                            && appointment.getFkAgenda().getLocalTime().isAfter(LocalTime.now())))
+                return true;
+        }
+
+        // Ok, não possui consultas pendentes;
+        return true;
+    }
+
 }

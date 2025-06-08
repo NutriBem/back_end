@@ -52,6 +52,4 @@ public class ImageData {
     // public void setContentType(String contentType) {
     //     this.contentType = contentType;
     // }
-
-    
 }
