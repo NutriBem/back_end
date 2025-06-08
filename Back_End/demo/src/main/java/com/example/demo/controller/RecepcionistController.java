@@ -19,7 +19,6 @@ public class RecepcionistController {
     
     public RecepcionistController(RecepcionistService recepcionistService){
         this.recepcionistService = recepcionistService;
-  
     }
 
     @PostMapping

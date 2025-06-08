@@ -52,6 +52,8 @@ public class PersonValidation extends Validation {
 
         if (personRepository.existsByEmail(person.getEmail()))
             throw new IllegalArgumentException("E-mail já dastrado.");
+
+        validateEmailFormat(person.getEmail());
     }
 
     public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
@@ -69,12 +71,6 @@ public class PersonValidation extends Validation {
         // senha digitada = hash armazenado
         Person person = personEmail.get();
 
-        System.out.println("E-mail > " + personEmail.get().getEmail()); // ok
-        System.out.println("Senha > " + personEmail.get().getPassword()); // ok
-
-        System.out.println("LOGIN PASSWORD: " + loginRequestDto.password());
-        System.out.println("LOGIN E-MAIL: " + loginRequestDto.email());
-
         if (!passwordEncoder.matches(loginRequestDto.password(),
                 person.getPassword()))
             return Optional.empty(); // senha errada
@@ -85,8 +81,6 @@ public class PersonValidation extends Validation {
     public void validatePasswordStrength(String password) {
         if (password == null || password.isEmpty())
             throw new ValidationException("A senha não pode ser nada");
-
-        System.out.println("Validando senha: " + password); // DEBUG
 
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasDigit = password.matches(".*\\d.*");

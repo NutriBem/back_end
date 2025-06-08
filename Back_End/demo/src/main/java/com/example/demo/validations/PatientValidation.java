@@ -40,7 +40,7 @@ public class PatientValidation extends Validation {
     public Patient getById(String id) {
         isNullOrEmpty(new TypeError("Informe o CPF", id));
 
-        UUID idToUuid = UUID.fromString(id); 
+        UUID idToUuid = UUID.fromString(id);
 
         Optional<Patient> patient = patientRepository.findById(idToUuid);
 
@@ -50,8 +50,8 @@ public class PatientValidation extends Validation {
         return patient.get();
     }
 
-    private void validateCpf(String cpf){
-         if (cpf == null || cpf.length() != 11 || !cpf.matches("[0-9]{11}")) 
+    private void validateCpf(String cpf) {
+        if (cpf == null || cpf.length() != 11 || !cpf.matches("[0-9]{11}"))
             throw new IllegalArgumentException("Formato invalido de cpf!");
 
         if (cpf.matches("(\\d)\\1{10}"))
@@ -64,7 +64,8 @@ public class PatientValidation extends Validation {
         }
 
         int digito1 = 11 - (soma % 11);
-        if (digito1 == 10 || digito1 == 11) digito1 = 0;
+        if (digito1 == 10 || digito1 == 11)
+            digito1 = 0;
 
         soma = 0;
         peso = 11;
@@ -73,9 +74,11 @@ public class PatientValidation extends Validation {
         }
 
         int digito2 = 11 - (soma % 11);
-        if (digito2 == 10 || digito2 == 11) digito2 = 0;
+        if (digito2 == 10 || digito2 == 11)
+            digito2 = 0;
 
-        if(digito1 == Character.getNumericValue(cpf.charAt(9)) && digito2 == Character.getNumericValue(cpf.charAt(10)) != true)
-         throw new IllegalArgumentException("cpf não valido!");
+        if (digito1 == Character.getNumericValue(cpf.charAt(9))
+                && digito2 == Character.getNumericValue(cpf.charAt(10)) != true)
+            throw new IllegalArgumentException("cpf não valido!");
     }
 }
