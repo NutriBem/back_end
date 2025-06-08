@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.mapping.Array;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.model.Nutritionist;

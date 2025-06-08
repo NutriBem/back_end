@@ -6,12 +6,15 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Transient;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Entity
@@ -35,6 +38,10 @@ public class Person implements Serializable {
     @Column(nullable = false, length = 11, unique = true)
     private String telephone;
 
-    @Transient
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private ImageData imageData;
+
+    @OneToMany(fetch = FetchType.LAZY)
     List<Appointment> appointmentList;
 }

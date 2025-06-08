@@ -50,5 +50,4 @@ public class PatientService {
     public List<Patient> getAll() {
         return patientRepository.findAll();
     }
-
 }
