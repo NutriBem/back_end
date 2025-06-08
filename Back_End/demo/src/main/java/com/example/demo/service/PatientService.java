@@ -20,15 +20,12 @@ public class PatientService {
     private PersonValidation personValidation;
     private PersonService personService;
 
-     private PasswordEncoder passwordEncoder;
-
     public PatientService(PatientRepository patientRepository, PatientValidation patientValidation,
-            PersonValidation personValidation, PersonService personService, PasswordEncoder passwordEncoder) {
+            PersonValidation personValidation, PersonService personService) {
         this.patientRepository = patientRepository;
         this.patientValidation = patientValidation;
         this.personValidation = personValidation;
         this.personService = personService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public PersonCreateResponseDto create(Patient patient) {
