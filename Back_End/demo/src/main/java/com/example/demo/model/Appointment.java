@@ -1,9 +1,7 @@
 package com.example.demo.model;
 
-import java.beans.Transient;
 import java.time.LocalDateTime;
 
-import com.itextpdf.io.exceptions.IOException;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;

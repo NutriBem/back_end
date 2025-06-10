@@ -1,6 +1,9 @@
 package com.example.demo.controller;
 
 import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +64,16 @@ public class AppointmentController {
         }
     }
 
+    @GetMapping("/day")
+    public ResponseEntity<?> getAppointmentOfTheDay() {
+        try {
+            List<AppointmentResponseDto> appointmentResponseDtos = appointmentService.getAppointmentOfTheDay();
+            return ResponseEntity.ok().body(appointmentResponseDtos);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping
     public ResponseEntity<?> getAll() {
         try {
@@ -71,20 +84,20 @@ public class AppointmentController {
     }
 
     @PostMapping("/{id}/pdf")
-    public ResponseEntity<?> createPdf(@PathVariable Long id, @RequestBody PdfRequestDto requestDto){
+    public ResponseEntity<?> createPdf(@PathVariable Long id, @RequestBody PdfRequestDto requestDto) {
         Appointment appointment = appointmentRepository.findById(id)
-             .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
-        
+                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+
         appointment.generatedPdf(requestDto.getTitle(), requestDto.getParagraph());
         appointmentRepository.save(appointment);
 
         return ResponseEntity.ok("Pdf gerado e amarzaenado com sucesso ^~^");
     }
-    
+
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<?> getPdf(@PathVariable Long id){
+    public ResponseEntity<?> getPdf(@PathVariable Long id) {
         Appointment appointment = appointmentRepository.findById(id)
-             .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
 
         if (appointment.getPdf() == null || appointment.getPdf().getArquivo() == null) {
             return ResponseEntity.notFound().build();
@@ -92,10 +105,10 @@ public class AppointmentController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment",  "consulta_" + id + ".pdf");
+        headers.setContentDispositionFormData("attachment", "consulta_" + id + ".pdf");
 
         return ResponseEntity.ok()
-            .headers(headers)
-            .body(appointment.getPdf().getArquivo());
+                .headers(headers)
+                .body(appointment.getPdf().getArquivo());
     }
 }
