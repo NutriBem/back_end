@@ -90,7 +90,7 @@ public class AppointmentService {
 
     // consultas do dia
     public List<AppointmentResponseDto> getAppointmentOfTheDay() {
-        List<Appointment> appointments = appointmentRepository.findByFkAgendaLocalDate(LocalDate.now());
+        List<Appointment> appointments = appointmentRepository.findByFkAgendaLocalDate(LocalDate.now().plusDays(1));
 
         return appointments.stream()
                 .map(AppointmentResponseDto::fromResponseDto)
