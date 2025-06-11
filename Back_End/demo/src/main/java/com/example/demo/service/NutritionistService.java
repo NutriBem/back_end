@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.PersonCreateResponseDto;
@@ -45,6 +44,7 @@ public class NutritionistService {
             throw new IllegalArgumentException("Nutricionista não encontrado.");
 
         NutritionistResponseDto response = new NutritionistResponseDto(
+                nutritionistOptinal.get().getId(),
                 nutritionistOptinal.get().getCrm(),
                 nutritionistOptinal.get().getName(),
                 nutritionistOptinal.get().getEmail(),
@@ -57,7 +57,8 @@ public class NutritionistService {
         List<Nutritionist> nutritionists = nutritionistRepository.findAll();
 
         List<NutritionistResponseDto> nutritionistResponseDtos = nutritionists.stream()
-                .map(n -> new NutritionistResponseDto(n.getCrm(), n.getName(), n.getEmail(), n.getTelephone()))
+                .map(n -> new NutritionistResponseDto(n.getId(), n.getCrm(), n.getName(), n.getEmail(),
+                        n.getTelephone()))
                 .collect(Collectors.toList());
 
         return nutritionistResponseDtos;
