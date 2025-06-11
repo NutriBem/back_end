@@ -1,16 +1,11 @@
 package com.example.demo.controller;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Optional;
 
-import org.aspectj.weaver.ast.Instanceof;
-import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.LoginRequestDto;
-import com.example.demo.dto.PersonResponseDto;
 import com.example.demo.dto.PersonResponseIdDto;
 import com.example.demo.model.Nutritionist;
 import com.example.demo.model.Patient;

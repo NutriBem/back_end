@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -46,14 +48,14 @@ public class AppointmentService {
         appointmentValidation.create(appointment);
 
         Patient patient = patientValidation.getById(appointment.patientId());
-        Agenda agenda = agendaValidation.findById(appointment.agendaId());        
+        Agenda agenda = agendaValidation.findById(appointment.agendaId());
         Recepcionist recepcionist;
 
         Appointment newAppointment = new Appointment();
         newAppointment.setFkAgenda(agenda);
         newAppointment.setFkPatient(patient);
 
-        if(!appointment.receptionistId().isEmpty()) {
+        if (!appointment.receptionistId().isEmpty()) {
             recepcionist = recepcionistValidation.getById(appointment.receptionistId());
             newAppointment.setFkReceptionist(recepcionist);
         }
@@ -84,5 +86,14 @@ public class AppointmentService {
 
     public void deleteById(Long id) {
         appointmentValidation.deleteById(id);
+    }
+
+    // consultas do dia
+    public List<AppointmentResponseDto> getAppointmentOfTheDay() {
+        List<Appointment> appointments = appointmentRepository.findByFkAgendaLocalDate(LocalDate.now().plusDays(1));
+
+        return appointments.stream()
+                .map(AppointmentResponseDto::fromResponseDto)
+                .collect(Collectors.toList());
     }
 }
