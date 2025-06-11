@@ -58,7 +58,7 @@ public class PersonController {
                 type = 3;
             }
 
-            return ResponseEntity.ok().body(PersonResponseIdDto.fromEntity(personOptional.get().getId(), type));
+            return ResponseEntity.ok().body(PersonResponseIdDto.fromEntity(personOptional.get().getId(), type, personOptional.get().getName()));
         } catch (IllegalArgumentException e) { // UUID INVALIDO
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (RuntimeException e) {// pega person não encontrado e outros erros simples
