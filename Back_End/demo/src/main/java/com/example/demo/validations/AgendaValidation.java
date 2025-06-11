@@ -50,7 +50,7 @@ public class AgendaValidation extends Validation {
         }
     }
 
-    public Agenda findById(UUID id) {
+    public Agenda findById(Long id) {
         Optional<Agenda> agendaOptional = agendaRepository.findById(id);
 
         if (agendaOptional.isEmpty())

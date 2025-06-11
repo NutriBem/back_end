@@ -91,7 +91,7 @@ public class PersonService {
 
     public Optional<Person> login(LoginRequestDto loginRequest) {
         System.out.println("\n[Service] Iniciando validação de login...");
-        return personValidation.login(loginRequest, passwordEncoder);
+        return personValidation.login(loginRequest);
     }
 
     protected <T extends Person> T createPerson(T person) {

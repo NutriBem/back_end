@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.model.Agenda;
 import com.example.demo.model.Nutritionist;
 
-public interface AgendaRepository extends JpaRepository<Agenda, UUID> {
+public interface AgendaRepository extends JpaRepository<Agenda, Long> {
 
     List<Agenda> findByNutritionist(Nutritionist nutritionist);
 

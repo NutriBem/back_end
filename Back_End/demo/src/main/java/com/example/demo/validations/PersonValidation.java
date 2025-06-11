@@ -25,10 +25,13 @@ public class PersonValidation extends Validation {
 
     private PersonRepository personRepository;
     private AppointmentRepository appointmentRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public PersonValidation(PersonRepository personRepository, AppointmentRepository appointmentRepository) {
+    public PersonValidation(PersonRepository personRepository, AppointmentRepository appointmentRepository,
+            PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.appointmentRepository = appointmentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void validateId(String id) {
@@ -56,7 +59,7 @@ public class PersonValidation extends Validation {
         validateEmailFormat(person.getEmail());
     }
 
-    public Optional<Person> login(LoginRequestDto loginRequestDto, PasswordEncoder passwordEncoder) {
+    public Optional<Person> login(LoginRequestDto loginRequestDto) {
 
         isNullOrEmpty(
                 new TypeError("Informe o E-mail.", loginRequestDto.email()),
@@ -64,6 +67,9 @@ public class PersonValidation extends Validation {
 
         // busca email
         Optional<Person> personEmail = personRepository.findByEmail(loginRequestDto.email());
+
+        System.out.println("ID person: " + personEmail.get().getEmail() + " - " + personEmail.get().getName() + " - "
+                + personEmail.get().getPassword());
 
         if (personEmail.isEmpty())
             return Optional.empty();
