@@ -2,7 +2,10 @@ package com.example.demo.scheduled;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,38 +27,45 @@ public class ScheduledAgenda {
         this.agendaRepository = agendaRepository;
     }
 
-    @Scheduled(cron = "* * 23 * * *")
+    @Scheduled(cron = "0/5 * * * * *")
     public void createAgenda() {
-
         List<Nutritionist> nutritionists = nutritionistRepository.findAll();
 
-        // horário de funcionamento da clínica
+        // Horário de funcionamento da clínica
         List<LocalTime> openingHours = BussinesHours.hours();
+
         for (Nutritionist nutritionist : nutritionists) {
             List<Agenda> agendas = agendaRepository.findByNutritionist(nutritionist);
 
-            long days = agendas.stream() // 
-                .map(Agenda::getLocalDate)
-                .distinct()
-                .count();
+            long days = agendas.stream()
+                    .map(Agenda::getLocalDate)
+                    .distinct()
+                    .count();
 
-            // duas semanas de agendas criadas
-            byte schedulingDaysToBeCreateddays = (byte) (14 - days);
+            byte schedulingDaysToBeCreated = (byte) (14 - days);
 
-            if (schedulingDaysToBeCreateddays > 0) {
-                LocalDate lastDay = agendas.get(agendas.size() - 1).getLocalDate(); // pega a última agenda criada
-                for (byte i = 0; i < schedulingDaysToBeCreateddays; i++) {
-                    for (LocalTime localTime : openingHours) {
+            if (schedulingDaysToBeCreated > 0) {
+                Optional<LocalDate> lastDayOptional = agendas.stream()
+                        .map(Agenda::getLocalDate)
+                        .max(Comparator.naturalOrder());
+
+                LocalDate lastDay = lastDayOptional.orElse(LocalDate.now());
+
+                List<Agenda> novasAgendas = new ArrayList<>();
+
+                for (byte i = 1; i <= schedulingDaysToBeCreated; i++) {
+                    LocalDate novaData = lastDay.plusDays(i);
+                   for (LocalTime localTime : openingHours) {
                         Agenda agenda = new Agenda();
                         agenda.setNutritionist(nutritionist);
-                        agenda.setLocalDate(lastDay.plusDays(i)); // incrementa +1 dia a partir do último
-                        agenda.setLocalTime(localTime); // todos os horários do dia
-
-                        agendaRepository.save(agenda);
+                        agenda.setLocalDate(novaData);
+                        agenda.setLocalTime(localTime);
+                        novasAgendas.add(agenda);
                     }
                 }
-            }
 
+                agendaRepository.saveAll(novasAgendas);
+            }
         }
     }
 }
