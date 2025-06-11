@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -49,7 +50,7 @@ public class AgendaValidation extends Validation {
         }
     }
 
-    public Agenda findById(Long id) {
+    public Agenda findById(UUID id) {
         Optional<Agenda> agendaOptional = agendaRepository.findById(id);
 
         if (agendaOptional.isEmpty())
