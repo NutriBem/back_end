@@ -15,7 +15,10 @@ import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.dto.PersonResponseDto;
 import com.example.demo.errs.TypeError;
 import com.example.demo.model.ImageData;
+import com.example.demo.model.Nutritionist;
+import com.example.demo.model.Patient;
 import com.example.demo.model.Person;
+import com.example.demo.repository.AgendaRepository;
 import com.example.demo.repository.ImageDataRepository;
 import com.example.demo.repository.PersonRepository;
 import com.example.demo.validations.PersonValidation;
@@ -27,16 +30,19 @@ public class PersonService {
     private PersonValidation personValidation;
     private PasswordEncoder passwordEncoder;
     private ImageDataRepository imageDataRepository;
+    private AgendaRepository agendaRepository;  // <-- injete aqui
+
 
     public PersonService(
             PersonRepository personRepository,
             PersonValidation personValidation,
             PasswordEncoder passwordEncoder,
-            ImageDataRepository imageDataRepository) {
+            ImageDataRepository imageDataRepository, AgendaRepository agendaRepository) {
         this.personRepository = personRepository;
         this.personValidation = personValidation;
         this.passwordEncoder = passwordEncoder;
         this.imageDataRepository = imageDataRepository;
+         this.agendaRepository = agendaRepository;
     }
 
     public Person getById(String id) {
@@ -57,7 +63,7 @@ public class PersonService {
         }
     }
 
-    public void deleteById(UUID id) {
+   public void deleteById(UUID id) {
         Optional<Person> personOptional = personRepository.findById(id);
 
         if (personOptional.isEmpty())
@@ -65,14 +71,23 @@ public class PersonService {
 
         Person person = personOptional.get();
 
-        // verificar se o usuário possui consultas não finalizadas;
-        boolean result = personValidation.appointmentNotFinished(person);
+        // Se for paciente, valida consultas não finalizadas
+        if (person instanceof Patient) {
+            boolean result = personValidation.appointmentNotFinished(person);
+            if (result)
+                throw new IllegalArgumentException("Não é possível excluir a sua conta, pois há consultas não concluídas.");
+        }
 
-        if (result)
-            throw new IllegalArgumentException("Não é possível excluir a sua conta, pois há consultas não concluídas.");
+        // Se for nutricionista, primeiro delete as agendas relacionadas
+        if (person instanceof Nutritionist) {
+            agendaRepository.deleteByNutritionist((Nutritionist) person);
+        }
 
-        personRepository.delete(personOptional.get());
+        // Finalmente, delete o usuário
+        personRepository.delete(person);
     }
+
+
 
     public Optional<Person> login(LoginRequestDto loginRequest) {
         System.out.println("\n[Service] Iniciando validação de login...");
